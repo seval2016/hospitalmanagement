@@ -1,0 +1,145 @@
+# Compiled class file
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven #
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.versionsBackup
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle #
+build/
+.gradle/
+!gradle-wrapper.jar
+
+# IntelliJ #
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse #
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# NetBeans #
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code #
+.vscode/
+
+# JDeveloper #
+.jdeveloper/
+jdev/
+
+# BlueJ #
+.bluej/
+
+# Thymeleaf #
+*~
+
+# Scala SBT #
+target/
+lib_managed/
+project/boot/
+project/plugins/
+
+# Play Framework #
+target/
+tmp/
+logs/
+project/project
+target/
+
+# Akka #
+target/
+test-reports/
+
+# Gradle Wrapper #
+!gradle-wrapper.jar
+
+# Ratpack #
+build/
+logs/
+
+# Ceylon #
+out/
+
+# Capsule #
+target/
+
+# JAR Files #
+*.jar
+
+# War files and EAR files
+*.war
+*.ear
+
+# JBoss
+work/
+tmp/
+
+# Karaf
+.history/
+.data/
+instances/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Yarn
+yarn-error.log
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Tika
+tika-app/target
+tika-parsers/target
+tika-xmp/target
+
+# Transifex
+.tx/
+
+# User-specific files
+.idea/
+.vscode/
