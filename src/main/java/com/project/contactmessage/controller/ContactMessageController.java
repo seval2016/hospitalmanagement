@@ -46,7 +46,6 @@ public class ContactMessageController {
         return contactMessageService.searchByEmail(email,page,size,sort,type);
     }
 
-    // Not: Odev : searchBySubject *******************************************
 
     @GetMapping("/searchBySubject")  // http://localhost:8080/contactMessages/searchBySubject?subject=odev + GET
     public Page<ContactMessageResponse> searchBySubject(
@@ -65,7 +64,7 @@ public class ContactMessageController {
         return ResponseEntity.ok(contactMessageService.deleteById(contactMessageId));
     }
 
-    // Not: Odev2:deleteByIdParam ********************************************
+
     @DeleteMapping("/deleteByIdParam")  // http://localhost:8080/contactMessages/deleteByIdParam?contactMessageId=4 + DELETE
     public ResponseEntity<String> deleteByIdParam(@RequestParam(value = "contactMessageId") Long contactMessageId){
         return ResponseEntity.ok(contactMessageService.deleteById(contactMessageId));
