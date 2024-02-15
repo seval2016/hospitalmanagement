@@ -92,4 +92,17 @@ public class ContactMessageController {
         List<ContactMessage> contactMessages = contactMessageService.searchBetweenTimes(startHourString,startMinuteString,endHourString,endMinuteString);
         return ResponseEntity.ok(contactMessages);
     }
+
+    @GetMapping("/getByIdParam")//http://localhost:8080/contactMessages/getByIdParam?contactMessageId=1  + GET
+    public ResponseEntity<ContactMessage> getById(@RequestParam(value = "contactMessageId") Long contactMessageId){
+        return ResponseEntity.ok(contactMessageService.getContactMessageById(contactMessageId));
+    }
+
+    @GetMapping("/getById/{contactMessageId}")//http://localhost:8080/contactMessages/getById/1  + GET
+    public ResponseEntity<ContactMessage> getByIdPath(@PathVariable Long contactMessageId) {
+        return ResponseEntity.ok(contactMessageService.getContactMessageById(contactMessageId));
+    }
+
+
+
 }
