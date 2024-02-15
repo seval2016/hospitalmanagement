@@ -6,6 +6,7 @@ import com.project.contactmessage.entity.ContactMessage;
 import com.project.contactmessage.mapper.ContactMessageMapper;
 import com.project.contactmessage.messages.Messages;
 import com.project.contactmessage.repository.ContactMessageRepository;
+import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.response.business.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Objects;
 
 //Service ile anote edilmesi gerekli çünkü bu bir semantik yani business lojic katımız burası developerdan ziyade framework'e de haber vermiş oluyoruz, component yazmış olsaydık bir sorun olmazdı fakat
@@ -82,5 +86,18 @@ public class ContactMessageService {
     public ContactMessage getContactMessageById(Long id){
         return contactMessageRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(Messages.NOT_FOUND_MESSAGE));
+    }
+
+    public List<ContactMessage> searchBetweenDates(String beginDateString, String endDateString) {
+
+        try {
+            //parametre de gelen String bir değerleri localdate türüne çevirme
+            LocalDate beginDate = LocalDate.parse(beginDateString);
+            LocalDate endDate = LocalDate.parse(endDateString);
+            return contactMessageRepository.findMessagesBetweenDates(beginDate,endDate);
+        } catch (DateTimeParseException e) {
+            throw new ConflictException(Messages.WRONG_DATE_MESSAGE);
+        }
+
     }
 }

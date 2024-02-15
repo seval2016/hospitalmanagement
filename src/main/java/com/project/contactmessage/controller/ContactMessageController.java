@@ -2,6 +2,7 @@ package com.project.contactmessage.controller;
 
 import com.project.contactmessage.dto.ContactMessageRequest;
 import com.project.contactmessage.dto.ContactMessageResponse;
+import com.project.contactmessage.entity.ContactMessage;
 import com.project.contactmessage.service.ContactMessageService;
 import com.project.payload.response.business.ResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/contactMessages")
 @RequiredArgsConstructor
 public class ContactMessageController {
-    private  final ContactMessageService contactMessageService;
+    private final ContactMessageService contactMessageService;
 
     @PostMapping("/save") //http://localhost:8080/contactMessages/save + POST + JSON
-    public ResponseMessage<ContactMessageResponse> save(@Valid @RequestBody ContactMessageRequest contactMessageRequest){
+    public ResponseMessage<ContactMessageResponse> save(@Valid @RequestBody ContactMessageRequest contactMessageRequest) {
         return contactMessageService.save(contactMessageRequest);
     }
 
@@ -31,8 +33,8 @@ public class ContactMessageController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type
-    ){
-        return contactMessageService.getAll(page,size,sort,type);
+    ) {
+        return contactMessageService.getAll(page, size, sort, type);
     }
 
     @GetMapping("/searchByEmail")  // http://localhost:8080/contactMessages/searchByEmail?email=aaa@bbb.com  + GET
@@ -43,10 +45,8 @@ public class ContactMessageController {
             @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type
     ) {
-        return contactMessageService.searchByEmail(email,page,size,sort,type);
+        return contactMessageService.searchByEmail(email, page, size, sort, type);
     }
-
-    // Not: Odev : searchBySubject *******************************************
 
     @GetMapping("/searchBySubject")  // http://localhost:8080/contactMessages/searchBySubject?subject=odev + GET
     public Page<ContactMessageResponse> searchBySubject(
@@ -56,18 +56,28 @@ public class ContactMessageController {
             @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type
     ) {
-        return contactMessageService.searchBySubject(subject,page,size,sort,type);
+        return contactMessageService.searchBySubject(subject, page, size, sort, type);
     }
 
 
     @DeleteMapping("/deleteById/{contactMessageId}") // http://localhost:8080/contactMessages/deleteById/2 + DELETE
-    public ResponseEntity<String> deleteByIdPath(@PathVariable Long contactMessageId){
+    public ResponseEntity<String> deleteByIdPath(@PathVariable Long contactMessageId) {
         return ResponseEntity.ok(contactMessageService.deleteById(contactMessageId));
     }
 
-    // Not: Odev2:deleteByIdParam ********************************************
-    @DeleteMapping("/deleteByIdParam")  // http://localhost:8080/contactMessages/deleteByIdParam?contactMessageId=4 + DELETE
-    public ResponseEntity<String> deleteByIdParam(@RequestParam(value = "contactMessageId") Long contactMessageId){
+    @DeleteMapping("/deleteByIdParam")
+    // http://localhost:8080/contactMessages/deleteByIdParam?contactMessageId=4 + DELETE
+    public ResponseEntity<String> deleteByIdParam(@RequestParam(value = "contactMessageId") Long contactMessageId) {
         return ResponseEntity.ok(contactMessageService.deleteById(contactMessageId));
+    }
+
+
+    @GetMapping("/searchBetweenDates")
+    //http://localhost:8080/contactMessages/searchBetweenDates?beginDate=2023-09-13&endDate=2023-09-15
+    public ResponseEntity<List<ContactMessage>> searchBetweenDates(
+            @RequestParam(value = "beginDate") String beginDateString,
+            @RequestParam(value = "endDate") String endDateString) {
+        List<ContactMessage> contactMessages = contactMessageService.searchBetweenDates(beginDateString, endDateString);
+        return ResponseEntity.ok(contactMessages);
     }
 }
