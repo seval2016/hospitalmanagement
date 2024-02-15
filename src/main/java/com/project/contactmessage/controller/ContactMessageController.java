@@ -80,4 +80,16 @@ public class ContactMessageController {
         List<ContactMessage> contactMessages = contactMessageService.searchBetweenDates(beginDateString, endDateString);
         return ResponseEntity.ok(contactMessages);
     }
+
+    @GetMapping("/searchBetweenTimes") // http://localhost:8080/contactMessages/searchBetweenTimes?startHour=09&startMinute=00&endHour=17&endMinute=30  + GET
+
+    public ResponseEntity<List<ContactMessage>> searchBetweenTimes(
+            @RequestParam(value="startHour") String startHourString,
+            @RequestParam(value="startMinute") String startMinuteString,
+            @RequestParam(value="endHour") String endHourString,
+            @RequestParam(value="endMinute") String endMinuteString
+    ){
+        List<ContactMessage> contactMessages = contactMessageService.searchBetweenTimes(startHourString,startMinuteString,endHourString,endMinuteString);
+        return ResponseEntity.ok(contactMessages);
+    }
 }

@@ -100,4 +100,18 @@ public class ContactMessageService {
         }
 
     }
+
+    public List<ContactMessage> searchBetweenTimes(String startHourString, String startMinuteString, String endHourString, String endMinuteString) {
+
+        try {
+            int startHour = Integer.parseInt(startHourString);
+            int startMinute = Integer.parseInt(startMinuteString);
+            int endHour = Integer.parseInt(endHourString);
+            int endMinute = Integer.parseInt(endMinuteString);
+
+            return contactMessageRepository.findMessagesBetweenTimes(startHour,startMinute,endHour,endMinute);
+        } catch (NumberFormatException e) {
+            throw new ConflictException(Messages.WRONG_TIME_MESSAGE);
+        }
+    }
 }
