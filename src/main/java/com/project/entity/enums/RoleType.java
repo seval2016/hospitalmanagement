@@ -7,7 +7,7 @@ public enum RoleType {
     PATIENT("Patient"),
     MANAGER("Manager"),
     NURSE("Nurse"),
-    ASSISTEN_MANAGER("viceDean");
+    ASSISTEN_MANAGER("AssistenManager");
 
     public final String name;
 

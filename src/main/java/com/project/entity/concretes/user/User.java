@@ -2,6 +2,7 @@ package com.project.entity.concretes.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.concretes.business.Appointment;
 import com.project.entity.concretes.business.PatientInfo;
@@ -89,7 +90,8 @@ public class User {
     )
    private Set<Appointment> AppointmentList;
 
-
-
+    @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private UserRole userRole;
 
 }
