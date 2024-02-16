@@ -1,0 +1,152 @@
+HOSPITAL MANAGEMENT PROJECT KICK OFF DOCUMENT
+
+Project Name: HOSPITAL MANAGEMENT WEB APPLICATION PROJECT
+
+  1. Hospital Management Application must be a web application.
+    (Hastane Yönetim Uygulaması bir web uygulaması olmalıdır.)
+  2. The application must have a user-friendly UI. (Non-functional requirement)
+     Uygulamanın kullanıcı dostu bir arayüze sahip olması gerekmektedir. (İşlevsel olmayan gereksinim)
+  3. The application must prioritize security. (Non-functional requirement)
+     Uygulama güvenli olmalıdır. (İşlevsel olmayan gereksinim)
+  4. The language of the application must be English. (Non-functional requirement)
+     Uygulamanın dili İngilizce olmalıdır. (İşlevsel olmayan gereksinim)
+  5. The application must display responses to user requests within 5 seconds. (Non-functional requirement)
+     Uygulama, kullanıcı isteğine yanıtı 5 saniye içinde göstermelidir. (İşlevsel olmayan gereksinim)
+  6. Anonymous users who need medical services should be able to register with their own information.
+     Tıbbi hizmetlere ihtiyaç duyan anonim kullanıcılar, kendi bilgileriyle bu uygulamaya kayıt olabilmelidir.
+  7. There should be five types of roles for authorized users: Admin, Doctor, Nurse, Receptionist, and Manager.
+     Yetkili kullanıcılar için beş farklı rol olmalıdır: Admin, Doktor, Hemşire, Resepsiyonist ve Yönetici.
+  8. Each user can only have one role, but a user with the Doctor role can also have the Specialist Doctor role simultaneously.
+     Her kullanıcı sadece bir role sahip olabilir, ancak Doktor rolüne sahip bir kullanıcı aynı zamanda Uzman Doktor rolüne de sahip olabilir.
+  9. Registered users should be able to log in to the application after registration.
+     Kayıtlı kullanıcılar kayıttan sonra uygulamaya giriş yapabilmelidir.
+ 10. Authenticated users should be able to update their own user information.
+     Doğrulanmış kullanıcılar, kendi kullanıcı bilgilerini güncelleyebilmelidir.
+ 11. Authenticated users should be able to update their passwords.
+     Doğrulanmış kullanıcılar, kendi şifrelerini güncelleyebilmelidir.
+ 12. The Admin user should be able to access all users' information.
+     Admin kullanıcısı, tüm kullanıcı bilgilerini alabilmelidir.
+ 13. Users with the Admin or Manager role should be able to access user information.
+     Admin veya Yönetici rolüne sahip kullanıcılar, kullanıcı bilgilerini alabilmelidir.
+ 14. Users with the Admin or Manager or Assistant_Manager role should be able to update doctor or nurse information.
+     Admin veya Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, doktor veya hemşire bilgilerini güncelleyebilmelidir.
+ 15. Users with the Admin role should be able to delete a user.
+     Admin rolüne sahip kullanıcı, bir kullanıcıyı silebilmelidir.
+ 16. Users with the Manager role should be able to delete a user whose role is Doctor, Nurse, or Assistant_Manager.
+     Yönetici rolüne sahip kullanıcı, Doktor, Hemşire veya Yardımcı Yönetici rolüne sahip bir kullanıcıyı silebilmelidir.
+ 17. Users with the Assistant_Manager role should be able to delete a user whose role is Doctor or Nurse.
+     Yardımcı Yönetici rolüne sahip kullanıcı, Doktor veya Hemşire rolüne sahip bir kullanıcıyı silebilmelidir.
+ 18. Users with the Admin role should be able to update all user information.
+     Admin rolüne sahip kullanıcı, tüm kullanıcı bilgilerini güncelleyebilmelidir.
+ 19. Users with the Manager or Assistant_Manager role should be able to update a user whose role is Doctor or Nurse.
+     Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, Doktor veya Hemşire rolüne sahip bir kullanıcıyı güncelleyebilmelidir.
+ 20. Users with the Manager or Assistant_Manager role should be able to retrieve a user by his/her name.
+     Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, kullanıcıyı adına göre alabilmelidir.
+ 21. Users with the Manager or Assistant_Manager role should be able to add a duty schedule to a user whose role is Doctor.
+     Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, Doktor rolüne sahip bir kullanıcıya ders programı ekleyebilmelidir.
+ 22. Users with the Nurse role should be able to add patient information.
+     Hemşire rolüne sahip kullanıcı, kendi bilgilerine ders programı ekleyebilmelidir.
+ 23. Users with the Admin or Manager or Assistant_Manager role should be able to retrieve the status of a user whose role is Nurse.
+     Admin veya Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, Hemşire rolüne sahip bir kullanıcının durumunu alabilmelidir.
+ 24. Users with the Admin or Doctor role should be able to access information about their patients.
+     Admin veya Doktor rolüne sahip kullanıcılar, kendi öğrencilerinin bilgilerini alabilmelidir.
+ 25. Users with the Admin or Manager or Assistant_Manager role should be able to assign Manager roles.
+     Admin veya Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, Yönetici rollerini atayabilmelidir.
+ 26. Users with the Admin or Manager or Assistant_Manager role should be able to access all Managers.
+     Admin veya Yönetici veya Yardımcı Yönetici rolüne sahip kullanıcılar, tüm Yöneticileri alabilmelidir.
+
+
+Admin
+---------------------
+Create Users - Kullanıcı Oluştur
+Delete Users - Kullanıcı Sil
+getAllUsers - Tüm Kullanıcıları Al
+Update Users - Kullanıcıları Güncelle
+getUsersByName - İsme Göre Kullanıcı Al
+CRUD for Treatment Plans -
+CRUD for Appointments -
+
+Doctor
+---------------------
+getAllPatients
+getAllUnassignedPatients
+getAllAssignedPatients
+getAllPatientsByPage
+deleteAppointment
+saveAppointment
+updateAppointment
+getHisHerAllAppointments
+CRUD for PatientInfo
+
+Nurse
+---------------------
+getAllPatients
+getAllUnassignedPatients
+getAllAssignedPatients
+getAllPatientsByPage
+deleteAppointment
+saveAppointment
+updateAppointment
+getHisHerAllAppointments
+CRUD for PatientInfo
+
+Manager
+---------------------
+getAllPatients
+getAllUnassignedPatients
+getAllAssignedPatients
+getAllPatientsByPage
+deleteAppointment
+saveAppointment
+updateAppointment
+getHisHerAllAppointments
+CRUD for PatientInfo
+CRUD for Managers
+
+Patient
+---------------------
+getAllTreatmentPlans
+getAllUnassignedTreatmentPlans
+getAllAssignedTreatmentPlans
+getAllTreatmentPlansByPage
+getHisHerTreatmentPlan
+getHisHerAppointment
+getHisHerTreatmentGrades
+
+User - User Role
+----------------
+ PatientInfo - TreatmentPlan - Appointment - Department - MedicalRecord
+
+treatment plan -> Tedavi Planı
+Patient Info -> Hasta Bilgisi
+Appointment  -> Randevu
+MedicalRecord ->
+Department ->
+
+
+Entities and Relationships:
+---------------------
+Doctor:
+    OneToOne: UserRole
+    OneToMany: PatientInfo, Appointment
+    ManyToMany: TreatmentPlan
+Nurse:
+    OneToOne: UserRole
+    OneToMany: PatientInfo, Appointment
+    ManyToMany: TreatmentPlan
+Patient:
+    OneToOne: UserRole
+    OneToMany: TreatmentPlan, Appointment
+Manager:
+    OneToOne: UserRole
+    OneToMany: PatientInfo, Appointment
+    ManyToMany: TreatmentPlan
+Admin:
+    OneToOne: UserRole
+    OneToMany: PatientInfo, Appointment
+    ManyToMany: TreatmentPlan
+Patient - Info
+    OneToOne: PatientInfo (reverse relationship)
+Treatment Plan - Appointment
+    ManyToOne: Appointment (reverse relationship)
+
