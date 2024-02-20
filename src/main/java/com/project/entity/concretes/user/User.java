@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.entity.concretes.business.Appointment;
-import com.project.entity.concretes.business.PatientInfo;
-import com.project.entity.concretes.business.TreatmentPlan;
+import com.project.entity.concretes.business.*;
 import com.project.entity.enums.Gender;
 import lombok.*;
 
@@ -69,29 +67,46 @@ public class User {
 
     private Boolean isChiefDoctor; //doktor başhekim mi ?
 
-    private Long doctorId; // bu hastalar için gerekli ,kendi doktorunun id si buraya yazılacak.
+    private Long patientDoctorId; // bu hastalar için gerekli doktor id'si buraya yazılacak.
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.REMOVE) //mappedBy = "patient" de olabilir.
-    // CascadeType.REMOVE ile bir user silindiğinde bu user'a ait bilgileri de silinsin.
-    private List<PatientInfo> patientInfos;
-
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.REMOVE)
-    private List<TreatmentPlan> treatmentPlans;
-
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(
-            name="user_appointment",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name = "appointment_id")
-    )
-   private Set<Appointment> AppointmentList;
-
+    /*
+    //userRole -> Herbir kullanıcının bir user rolü olmalıdır.
+     */
     @OneToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserRole userRole;
+
+    /*
+    patientInfo -> Bu bir hasta ise patientInfo bilgileri olmalı
+    */
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
+    private List<PatientInfo> patientInfos;
+
+    /*
+       //patient yada doctor da olsa threatmentPlan bilgileri olmalı
+        */
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "user_treatmentplan",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "treatmentplan_id")
+    )
+    private Set<TreatmentPlan> treatmentPlanList;
+
+    /*
+     // appointment -> Eğer user doctor da olsa patient de olsa appointment ile ilişkisi olması lazım. Benim randevularımı getir dediğinde ileriki tarihlerde olan randevuları görmesi gerekli
+     */
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "appointment_patient_table",
+            joinColumns = @JoinColumn(name = "patient_id"),
+            inverseJoinColumns = @JoinColumn(name = "appointment_id")
+    )
+    private List<Appointment> appointmentList;
 
 }

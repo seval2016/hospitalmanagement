@@ -33,23 +33,41 @@ public class PatientInfo {
 
     private String currentMedications; //Hasta mevcut ilaçları.
 
+    private String InfoNote;//Doktor hastası hakkında not tutmak isterse kullanacağı kısım
+
+    private String insuranceCompanyName;
+    
+    private String insurancePolicyNumber;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
-    private LocalDate upcomingAppointments;
+    private LocalDate upcomingAppointments;//gelecek randevuları
 
-    @ManyToOne // 1 hastanın birden fazla patientinfosu olabilir
+     /*
+    Soru 1 : PatientInfo bilgisini ilk etapta kullanacak roller hangisi ? doctor,patient
+     O zaman doctor ve patient'ı bura ile ilişkilendirlecek. Ben patient Seval benım dahiliye PatientInfo'm olacak
+        kbb PatientInfo'm olacak vs vs. Benim tarafımdan bakarsam PatientInfo'yu many görüyorum. PatientInfo tarafına
+        geçersem oradaki kbb yada java dahiliye infosu sadece bana ait.
+  */
+    @ManyToOne //1 doctorun 1 den fazla patient info ya atanabilir
     @JsonIgnore
-    @JoinColumn(name = "patient_id")
-    private User patient; // patient adında bir User nesnesi
+    private User doctor;
 
-    @ManyToOne // 1 doktor birden fazla info ya atanabilir
-    @JoinColumn(name = "doctor_id")
-    private User doctor; // doctor adında bir User nesnesi
-
-    @OneToMany(mappedBy = "patientInfo", cascade = CascadeType.ALL)
+    @ManyToOne //1 hastanın 1 den fazla patient info ysu atanabilir
     @JsonIgnore
-    private List<Appointment> appointments;
+    private User patient;
 
-    @OneToOne(mappedBy = "patientInfo")
-    private TreatmentPlan treatmentPlan;
+    /*
+     Department'nın PatientInfo ile @ManyToOne ilişkisi var -> Bir departmanın birden fazla patient infosu olabilir.
+    Şöyleki kbb düşünelim kbb ye gelen 100 tane hasta varsa aynı şekilde 100 tane de patientInfosu vardır.
+     */
+    @ManyToOne
+    private Department department;
+
+    /*
+    Medical record ile @OnetoOne ilişki var tek taraflı yapılacak. Bu yüzden jsonignore gerek yok.
+     */
+    @OneToOne
+    private MedicalRecord medicalRecord;
+
 
 }

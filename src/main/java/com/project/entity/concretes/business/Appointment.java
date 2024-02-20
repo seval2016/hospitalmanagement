@@ -1,8 +1,6 @@
 package com.project.entity.concretes.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.concretes.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
+
 
 @Entity
 
@@ -31,26 +30,25 @@ public class Appointment {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate appointmentDateTime;
 
-    @ManyToOne
+    /*
+   Bu classın sadece userlar ile alakası var. Bir doctorun birden fazla randevusu olabilir
+    */
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User doctor;
 
-    @ManyToOne
-    private User patient;
+     /*
+    Bir öğrenci birden fazla rehberlik toplantısına katılabildiği gibi bir toplantıya birden fazla öğrenci katılabilir.
+     Bu ksımda özellikle customize edilir çünkü eger student_id diye belirtmezsek user_id olarak alır bu da güzel olmaz */
+    @ManyToMany
+    @JoinTable(
+            name = "appointment_patient_table",
+            joinColumns = @JoinColumn(name = "appointment_id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id")
+    )
+    private List<User> patientList;
 
-    @ManyToOne
-    private PatientInfo patientInfo;
 
-    @OneToOne
-    @JoinColumn(name = "medical_record_id")
-    private MedicalRecord medicalRecord;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToMany (mappedBy = "AppointmentList",fetch = FetchType.EAGER)
-    private Set<User> users;
 
-    @PreRemove
-    private void removeAppointmentFromUser(){
-        users.forEach(user ->user.getAppointmentList().remove(this)); //Bu kullanıcının appointmentlerini getir ve bunların arasında silmek istediğim nesneyi sil. Bu method bir appointment silmek istediğim zaman tetiklenecek ve gidip o appointment'i silecek.
-    }
 }
 

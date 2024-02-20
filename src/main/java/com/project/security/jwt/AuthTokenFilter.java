@@ -32,6 +32,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
@@ -46,6 +48,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
+                // bu UsernamePasswordAuthenticationToken nesnesinin ayrıntılarını ayarlar.
+                // WebAuthenticationDetailsSource kullanarak, isteğin ayrıntılarını (örneğin, IP adresi,
+                // kullanılan tarayıcı vb.) bu nesneye ekler. Bu bilgiler, kullanıcının oturum açma
+                // isteğinin nereden geldiği ve hangi cihaz üzerinden yapıldığı gibi ayrıntıları içerir.
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
