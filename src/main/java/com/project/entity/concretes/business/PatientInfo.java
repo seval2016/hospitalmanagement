@@ -42,8 +42,8 @@ public class PatientInfo {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
     private LocalDate upcomingAppointments;//gelecek randevuları
 
-     /*
-    Soru 1 : PatientInfo bilgisini ilk etapta kullanacak roller hangisi ? doctor,patient
+    /*
+     PatientInfo bilgisini ilk etapta kullanacak roller hangisi ? doctor,patient
      O zaman doctor ve patient'ı bura ile ilişkilendirlecek. Ben patient Seval benım dahiliye PatientInfo'm olacak
         kbb PatientInfo'm olacak vs vs. Benim tarafımdan bakarsam PatientInfo'yu many görüyorum. PatientInfo tarafına
         geçersem oradaki kbb yada java dahiliye infosu sadece bana ait.
@@ -68,6 +68,4 @@ public class PatientInfo {
      */
     @OneToOne
     private MedicalRecord medicalRecord;
-
-
 }

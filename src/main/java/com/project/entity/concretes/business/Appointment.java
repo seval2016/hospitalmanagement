@@ -37,8 +37,8 @@ public class Appointment {
     private User doctor;
 
      /*
-    Bir öğrenci birden fazla rehberlik toplantısına katılabildiği gibi bir toplantıya birden fazla öğrenci katılabilir.
-     Bu ksımda özellikle customize edilir çünkü eger student_id diye belirtmezsek user_id olarak alır bu da güzel olmaz */
+     Bir öğrenci birden fazla rehberlik toplantısına katılabildiği gibi bir toplantıya birden fazla öğrenci katılabilir.
+     Bu ksımda özellikle customize edilir çünkü eger patient_id diye belirtmezsek user_id olarak alır bu da güzel olmaz */
     @ManyToMany
     @JoinTable(
             name = "appointment_patient_table",

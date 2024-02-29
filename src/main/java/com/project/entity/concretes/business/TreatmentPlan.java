@@ -44,10 +44,10 @@ public class TreatmentPlan {
     private String treatmentMethod; //Tedavi yöntemi
 
     @NotNull(message = "Treatment Duration must not be empty")
-    private Duration treatmentDuration;//Tedavi süresi
+    private Duration treatmentDuration; //Tedavi süresi
 
     @NotNull(message = "Medications must not be empty")
-    private List<String> medications;//İlaç bilgileri
+    private List<String> medications; //İlaç bilgileri
 
     /*
      - ilişki user tarafta yani treatmentPlanList field'ının bulunduğu yerde setleniyor.
