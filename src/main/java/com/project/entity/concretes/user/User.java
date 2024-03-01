@@ -72,22 +72,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    /*
+
     //userRole -> Herbir kullanıcının bir user rolü olmalıdır.
-     */
+
     @OneToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UserRole userRole;
 
-    /*
-    patientInfo -> Bu bir hasta ise patientInfo bilgileri olmalı
-    */
+    //patientInfo -> Bu bir hasta ise patientInfo bilgileri olmalı
+
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE)
     private List<PatientInfo> patientInfos;
 
-    /*
-       //patient yada doctor da olsa threatmentPlan bilgileri olmalı
-        */
+   //patient yada doctor da olsa threatmentPlan bilgileri olmalı
+
     @ManyToMany
     @JsonIgnore
     @JoinTable(
@@ -97,9 +95,8 @@ public class User {
     )
     private Set<TreatmentPlan> treatmentPlanList;
 
-    /*
-     // appointment -> Eğer user doctor da olsa patient de olsa appointment ile ilişkisi olması lazım. Benim randevularımı getir dediğinde ileriki tarihlerde olan randevuları görmesi gerekli
-     */
+
+   // appointment -> Eğer user doctor da olsa patient de olsa appointment ile ilişkisi olması lazım. Benim randevularımı getir dediğinde ileriki tarihlerde olan randevuları görmesi gerekli
     @JsonIgnore
     @ManyToMany
     @JoinTable(

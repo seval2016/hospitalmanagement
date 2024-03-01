@@ -1,7 +1,6 @@
 package com.project.entity.concretes.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.entity.concretes.user.User;
 import lombok.*;
 
@@ -49,26 +48,21 @@ public class TreatmentPlan {
     @NotNull(message = "Medications must not be empty")
     private List<String> medications; //İlaç bilgileri
 
-    /*
-     - ilişki user tarafta yani treatmentPlanList field'ının bulunduğu yerde setleniyor.
-     - FetchType.EAGER ile treatmentPlan nesnesi oluşturulduğunda otomatik olarak getirilir (eager loading). Bu, ilgili treatmentPlan nesnesinin yüklenmesi sırasında ilişkili kullanıcıları (users) veritabanından çekilir ve bu kullanıcılar users alanına otomatik olarak atanır.
-     */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
+     //- ilişki user tarafta yani treatmentPlanList field'ının bulunduğu yerde setleniyor.
+     //- FetchType.EAGER ile treatmentPlan nesnesi oluşturulduğunda otomatik olarak getirilir (eager loading). Bu, ilgili treatmentPlan nesnesinin yüklenmesi sırasında ilişkili kullanıcıları (users) veritabanından çekilir ve bu kullanıcılar users alanına otomatik olarak atanır.
+
     @ManyToMany(mappedBy = "treatmentPlanList", fetch = FetchType.EAGER)
     private Set<User> users;
 
-    /*
-    //CascadeType.PERSIST özelliği ile işaretlenmişse, bir treatmentPlan oluşturulduğunda bu treatment plan ile ilişkilendirilmiş olan medical Record nesnesi de otomatik olarak persist edilecektir.
 
-    my note: içinde bulunduğum treatmentPlan kaydedilirken medical Record bilgisi de kaydedilsin istiyorsam CascadeType.PERSIST kısmını tetikliyoruz. Persist kalıcı hale getiriyor.
-     */
+    //CascadeType.PERSIST özelliği ile işaretlenmişse, bir treatmentPlan oluşturulduğunda bu treatment plan ile ilişkilendirilmiş olan medical Record nesnesi de otomatik olarak persist edilecektir.
+    // my note: içinde bulunduğum treatmentPlan kaydedilirken medical Record bilgisi de kaydedilsin istiyorsam CascadeType.PERSIST kısmını tetikliyoruz. Persist kalıcı hale getiriyor.
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     private MedicalRecord medicalRecord;
 
-    /*
-       @ManyToMany ->Department
-    */
-
+    //@ManyToMany ->Department
     @ManyToMany
     @JoinTable(
             name = "treatmentPlan_department",
@@ -76,4 +70,5 @@ public class TreatmentPlan {
             inverseJoinColumns = @JoinColumn(name = "department_id")
     )
     private Set<Department> departments;
+
 }

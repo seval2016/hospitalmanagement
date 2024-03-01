@@ -78,18 +78,6 @@ updateAppointment
 getHisHerAllAppointments
 CRUD for PatientInfo
 
-Nurse
----------------------
-getAllPatients
-getAllUnassignedPatients
-getAllAssignedPatients
-getAllPatientsByPage
-deleteAppointment
-saveAppointment
-updateAppointment
-getHisHerAllAppointments
-CRUD for PatientInfo
-
 Manager
 ---------------------
 getAllPatients
