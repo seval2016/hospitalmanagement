@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtUtils {
+public class JwtUtils { //Jwt token içerisindeki username bilgisini almak için ve jwt tokenleri generate ve validate etme işlemleri için yazdığımız yardımcı methodların bulunduğu class.
+
+    // Bir Jwt Token kaydedilirken hangi bilgiler gerekli. 1-jwtExpirationMs ve 2-jwtSecret
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
@@ -21,9 +23,9 @@ public class JwtUtils {
     @Value("${backendapi.app.jwtSecret}")
     private String jwtSecret;
 
-    public String generateJwtToken(Authentication authentication){
+    public String generateJwtToken(Authentication authentication){ //anlık olrak login işlemini gerçekleştiren kullanıcıyı bul getir.
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal(); //getPrincipal dendiğinde login olan kullanıcıyı getirir.
         return generateTokenFromUsername(userDetails.getUsername());
     }
 

@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class AuthTokenFilter extends OncePerRequestFilter {
+public class AuthTokenFilter extends OncePerRequestFilter { //JwtToken ile alakalı security katmanında gerekli olan methodları yada class'ları jwt package içerisinde oluşturuyoruz.AuthTokenFilter class'ının amacı JwtToken'leri JwtToken üzerinde kullanıcıları tanımlama işlemini design edebilmek için bize bir filtre lazım. AuthTokenFilter, JwtToken ile validate etme işlemlerini yapacak olan filter class'ıdır. AuthTokenFilter bir filter class'ı ve bunu securty'e bildirmek için OncePerRequestFilter'den extend ediyoruz.
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -31,8 +31,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -65,7 +63,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         String headerAuth = request.getHeader("Authorization");
 
-        if(StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")){
+        if(StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")){ //gelen stringin içi dolu olup olmadıgını kontrol edıyor
             return headerAuth.substring(7);
         }
         return null;

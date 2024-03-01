@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {// Securtiy sadece kendisine ait katmanları bilir user, user controller veya user service'i bilmez. Onun anlayacağı bir service yazmamız gerekir. UserDetailsServiceImpl class'ı da security'nin anlayacağı service class'ı dır. Bunu security'e söyleyebilmek için UserDetailsService classını implement etmeliyiz.
 
     private final UserRepository userRepository;
 
@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         User user = userRepository.findByUsernameEquals(username);
 
-        if(user !=null){
+        if(user !=null){ //Eğer user null'a eşit değilse UserDetailsImpl türüne çevireceğiz.
             return new UserDetailsImpl(
                     user.getId(),
                     user.getUsername(),
@@ -30,6 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     user.getSsn()
             );
         }
-        throw new UsernameNotFoundException("User '" + username + "' not found"); // User 'Husnu' nt found
+        throw new UsernameNotFoundException("User '" + username + "' not found"); // User 'Seval' nt found
     }
 }

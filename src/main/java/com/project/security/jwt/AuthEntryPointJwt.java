@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+public class AuthEntryPointJwt implements AuthenticationEntryPoint { //AuthEntryPointJwt class'ı özel bir class'dır.Security katmanında fırlayacak herhangi bir exception kafasına göre fırlamasın bu class'ın içerisine gelsin ve bu class'ın içerisinde setlediğimiz bazı değişkenler var bu değişkenler ile exception client tarafına gitsin. Fırlayacak olan hataları AuthenticationEntryPoint karşılıyor biz bu interface'i implements ederek bazı methodların içerisini doldurarak nasıl davranması gerektiği ile alakalı bilgiler vereceğiz.
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
-    //  kimlik doğrulama hatası olduğunda otomatik olarak çalışacak methodu override ediyoruz..
+    // kimlik doğrulama hatası olduğunda (401 hatası) otomatik olarak içerisindeki default değerler ile çalışacak methodu override ediyoruz. Bizim istediğimiz verilerle değiştirmek için yapıyoruz.
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
