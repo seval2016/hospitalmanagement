@@ -96,14 +96,12 @@ public class User {
     private Set<TreatmentPlan> treatmentPlanList;
 
 
-   // appointment -> Eğer user doctor da olsa patient de olsa appointment ile ilişkisi olması lazım. Benim randevularımı getir dediğinde ileriki tarihlerde olan randevuları görmesi gerekli
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "appointment_patient_table",
-            joinColumns = @JoinColumn(name = "patient_id"),
-            inverseJoinColumns = @JoinColumn(name = "appointment_id")
-    )
-    private List<Appointment> appointmentList;
+    // Bir doktorun birden fazla randevusu olabilir
+    @OneToMany(mappedBy = "doctor")
+    private List<Appointment> doctorAppointments;
+
+    // Bir hastanın birden fazla randevusu olabilir
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> patientAppointments;
 
 }

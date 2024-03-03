@@ -32,7 +32,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return  configuration.getAuthenticationManager();
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -52,18 +52,19 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter(){
+    public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -73,7 +74,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer(){
+    public WebMvcConfigurer corsConfigurer() {
 
         return new WebMvcConfigurer() {
             // addCorsMappings adlı bir metodu override ediyoruz, yani
@@ -95,7 +96,7 @@ public class WebSecurityConfig {
         };
     }
 
-    private static final String[] AUTH_WHITE_LIST ={
+    private static final String[] AUTH_WHITE_LIST = {
             "/",
             "index.html",
             "/images/**",

@@ -30,13 +30,20 @@ public class Appointment {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate appointmentDateTime;
 
-    //Bu classın sadece userlar ile alakası var. Bir doctorun birden fazla randevusu olabilir
+
+    // Bir randevu bir doktora aittir
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "doctor_id")
     private User doctor;
 
-    //Eğer bir randevunun birden fazla hastası olamaz bu yüzden @OneToMany
-    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL)
-    private List<User> patientList;
+
+    // Bir randevu bir hastaya aittir
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private User patient;
+
+
+
 
 }
 

@@ -45,16 +45,17 @@ public class TreatmentPlan {
     @NotNull(message = "Treatment Duration must not be empty")
     private Duration treatmentDuration; //Tedavi süresi
 
-    @NotNull(message = "Medications must not be empty")
-    private List<String> medications; //İlaç bilgileri
+    @ElementCollection
+    @CollectionTable(name = "treatment_plan_medications", joinColumns = @JoinColumn(name = "treatment_plan_id"))
+    @Column(name = "medication")
+    private List<String> medications;
 
 
-     //- ilişki user tarafta yani treatmentPlanList field'ının bulunduğu yerde setleniyor.
+    //- ilişki user tarafta yani treatmentPlanList field'ının bulunduğu yerde setleniyor.
      //- FetchType.EAGER ile treatmentPlan nesnesi oluşturulduğunda otomatik olarak getirilir (eager loading). Bu, ilgili treatmentPlan nesnesinin yüklenmesi sırasında ilişkili kullanıcıları (users) veritabanından çekilir ve bu kullanıcılar users alanına otomatik olarak atanır.
 
     @ManyToMany(mappedBy = "treatmentPlanList", fetch = FetchType.EAGER)
     private Set<User> users;
-
 
     //CascadeType.PERSIST özelliği ile işaretlenmişse, bir treatmentPlan oluşturulduğunda bu treatment plan ile ilişkilendirilmiş olan medical Record nesnesi de otomatik olarak persist edilecektir.
     // my note: içinde bulunduğum treatmentPlan kaydedilirken medical Record bilgisi de kaydedilsin istiyorsam CascadeType.PERSIST kısmını tetikliyoruz. Persist kalıcı hale getiriyor.
