@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
+    //User'ı UserResponse'a çevireceğiz. Yani POJO ---> DTO çevirilecek
     public UserResponse mapUserToUserResponse(User user){
         return  UserResponse.builder()
                 .userId(user.getId())

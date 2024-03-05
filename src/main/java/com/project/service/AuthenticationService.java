@@ -10,6 +10,7 @@ import com.project.payload.response.authentication.AuthResponse;
 import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.security.jwt.JwtUtils;
+
 import com.project.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -71,16 +72,17 @@ public class AuthenticationService {
     }
 
     public UserResponse findByUsername(String username) {
-/*       User user = userRepository.findByUsernameEquals(username);
-       return userMapper.mapUserToUserResponse(user);*/
+        /*  User user = userRepository.findByUsernameEquals(username);
+          return userMapper.mapUserToUserResponse(user);
+        */
         return userMapper.mapUserToUserResponse(userRepository.findByUsernameEquals(username));
     }
 
-    public void updatePassword(UpdatePasswordRequest updatePasswordRequest,
-                               HttpServletRequest request) {
+    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request) {
 
-        String userName = (String) request.getAttribute("username");
+        String userName = (String) request.getAttribute("username");//Kullanıcı kim ?
         User user = userRepository.findByUsernameEquals(userName);
+
         //!!! built_in kontrolu ??
         if(Boolean.TRUE.equals(user.getBuilt_in())){
             throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
