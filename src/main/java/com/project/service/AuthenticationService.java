@@ -91,7 +91,7 @@ public class AuthenticationService {
         if(!passwordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword())){
             throw new BadRequestException(ErrorMessages.PASSWORD_NOT_MATCHED);
         }
-        // !!! yeni sifre hashlenerek Kaydediliyor
+        // !!! yeni sifre hashlenerek Kaydedilmeli !!!!
         String hashedPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);

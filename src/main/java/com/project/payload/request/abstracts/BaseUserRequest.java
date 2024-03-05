@@ -8,10 +8,10 @@ import lombok.experimental.SuperBuilder;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@SuperBuilder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public abstract class BaseUserRequest extends AbstractUserRequest{
 
     @NotNull(message = "Please enter your password")
