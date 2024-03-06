@@ -16,6 +16,7 @@ import com.project.service.UserRoleService;
 import com.project.service.helper.MethodHelper;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,6 @@ public class UserService {
         return SuccessMessages.USER_DELETE;
     }
 
-
     public ResponseMessage<BaseUserResponse> updateUser(UserRequest userRequest, Long userId) {
 
         // !!! update edilecek user var mı kontrolü
@@ -117,12 +117,22 @@ public class UserService {
         methodHelper.checkBuiltIn(user);
 
         //!!! duplicate control yani username-ssn-phoneNumber-email unique mi ??
-        uniquePropertyValidator.checkDuplicate(
-                                            userRequest.getUsername(),
-                                            userRequest.getSsn(),
-                                            userRequest.getPhoneNumber(),
-                                            userRequest.getEmail());
+        uniquePropertyValidator.checkUniqueProperties(user,userRequest);
 
+        //!!! DTO -> POJO
+        User updatedUser=userMapper.mapUserRequestToUpdatedUser(userRequest,userId);
 
+        //!!! password'u encode etmemiz gerekli yani hashlenmeli
+        updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+        //!!! kullanıcını user role bilgisini getir
+        updatedUser.setUserRole(user.getUserRole());
+        User savedUser=userRepository.save(updatedUser);
+
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_UPDATE_MESSAGE)
+                .httpStatus(HttpStatus.OK)
+                .object(userMapper.mapUserToUserResponse(savedUser))
+                .build();
     }
 }

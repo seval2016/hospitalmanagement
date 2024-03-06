@@ -24,27 +24,27 @@ public class UniquePropertyValidator {
         String updatedEmail = "";
         boolean isChanged = false;
 
-        if (!user.getUsername().equalsIgnoreCase(abstractUserRequest.getUsername())) {
+        if (!user.getUsername().equalsIgnoreCase(abstractUserRequest.getUsername())) { //db'deki kullanıcının username bilgisi request'de gelen username bilgisine eşit değilse alttaki checkDuplicate methodu çalışacak.
             updatedUsername = abstractUserRequest.getUsername();
             isChanged = true;
         }
 
-        if (!user.getSsn().equalsIgnoreCase(abstractUserRequest.getSsn())) {
+        if (!user.getSsn().equalsIgnoreCase(abstractUserRequest.getSsn())) {//db'deki kullanıcının ssn bilgisi request'de gelen ssn bilgisine eşit değilse alttaki checkDuplicate methodu çalışacak.
             updatedSsn = abstractUserRequest.getSsn();
             isChanged = true;
         }
 
-        if (!user.getPhoneNumber().equalsIgnoreCase(abstractUserRequest.getPhoneNumber())) {
+        if (!user.getPhoneNumber().equalsIgnoreCase(abstractUserRequest.getPhoneNumber())) {//db'deki kullanıcının PhoneNumber bilgisi request'de gelen PhoneNumber bilgisine eşit değilse alttaki checkDuplicate methodu çalışacak.
             updatedPhone = abstractUserRequest.getPhoneNumber();
             isChanged = true;
         }
 
-        if (!user.getEmail().equalsIgnoreCase(abstractUserRequest.getEmail())) {
+        if (!user.getEmail().equalsIgnoreCase(abstractUserRequest.getEmail())) {//db'deki kullanıcının Email bilgisi request'de gelen Email bilgisine eşit değilse alttaki checkDuplicate methodu çalışacak.
             updatedEmail = abstractUserRequest.getEmail();
             isChanged = true;
         }
 
-        if (isChanged) {
+        if (isChanged) { //yukarıdaki kodlardan herhangi biri yada birden fazlası çalışırsa bu method çalışır.
             checkDuplicate(updatedUsername, updatedSsn, updatedPhone, updatedEmail);
         }
     }
