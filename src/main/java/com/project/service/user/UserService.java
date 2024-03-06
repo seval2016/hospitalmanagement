@@ -8,6 +8,7 @@ import com.project.payload.mappers.UserMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserRequestWithoutPassword;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
@@ -134,5 +135,33 @@ public class UserService {
                 .httpStatus(HttpStatus.OK)
                 .object(userMapper.mapUserToUserResponse(savedUser))
                 .build();
+    }
+
+    public ResponseEntity<String> updateUserForUsers(UserRequestWithoutPassword userRequest,
+                                                     HttpServletRequest request) {
+        String userName = (String) request.getAttribute("username"); //önce reguest ile gelen bu user kim onu alıyorum !
+        User user = userRepository.findByUsernameEquals(userName);
+
+        //!!! built_in
+        methodHelper.checkBuiltIn(user);
+
+        // unique kontrolu
+        uniquePropertyValidator.checkUniqueProperties(user, userRequest);
+
+        //!!! DTO --> POJO -->Burası kötü kod örneği normalde mapUserRequestToUpdatedUser kullanıyorduk.
+        user.setUsername(userRequest.getUsername());
+        user.setBirthDay(userRequest.getBirthDay());
+        user.setEmail(userRequest.getEmail());
+        user.setPhoneNumber(userRequest.getPhoneNumber());
+        user.setBirthPlace(userRequest.getBirthPlace());
+        user.setGender(userRequest.getGender());
+        user.setName(userRequest.getName());
+        user.setSurname(userRequest.getSurname());
+        user.setSsn(userRequest.getSsn());
+
+        userRepository.save(user);
+
+        String message = SuccessMessages.USER_UPDATE;
+        return ResponseEntity.ok(message);
     }
 }

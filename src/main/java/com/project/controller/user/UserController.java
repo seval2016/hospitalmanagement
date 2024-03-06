@@ -2,6 +2,7 @@ package com.project.controller.user;
 
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserRequestWithoutPassword;
 import com.project.payload.response.abstracts.BaseUserResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.UserResponse;
@@ -40,8 +41,23 @@ public class UserController {
     //!!! Doctor ve patient için ekstra fieldlar gerekeceği için başka endpoint gerekiyor.
     @PutMapping("/update/{userId}") //http://localhost:8080/user/update/4
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseMessage<BaseUserResponse> updateAdminManagerAndManagerAssistantForAdmin(@RequestBody @Valid UserRequest userRequest, @PathVariable Long userId) {
+    public ResponseMessage<BaseUserResponse> updateAdminManagerAndManagerAssistantForAdmin(@RequestBody @Valid UserRequest userRequest,
+                                                                                           @PathVariable Long userId) {
         return userService.updateUser(userRequest, userId);
     }
+    // Update işlemi
+    // !!! Kullanıcının kendisini update etmesini sağlayan method bu yüzden id bilgisine gerek yok
+
+    @PatchMapping("/updateUser") //http://localhost:8080/user/updateUser + PATCH + JSON
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','DOKTOR')")
+    public ResponseEntity<String> updateUser(@RequestBody @Valid UserRequestWithoutPassword userRequestWithoutPassword,
+                                             HttpServletRequest request){ //userRequestWithoutPassword diye yeni bir request tanımladık çünkü userRequest deseydik pasword bilgisi de güncellenecekti ama biz bunu istmıyoruz çünkü zaten kullanıcı kendi passwordu'nu AuthenticationController sınıfında güncelliyor.
+
+        return userService.updateUserForUsers(userRequestWithoutPassword,request);
+    }
+
+
+
+
 
 }

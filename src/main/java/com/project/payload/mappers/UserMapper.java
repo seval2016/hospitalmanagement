@@ -3,6 +3,7 @@ package com.project.payload.mappers;
 import com.project.entity.concretes.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
+import com.project.payload.request.user.UserRequestWithoutPassword;
 import com.project.payload.response.user.UserResponse;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +61,5 @@ public class UserMapper {
                 .build();
 
     }
-
-
 
 }
