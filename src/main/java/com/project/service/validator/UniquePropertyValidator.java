@@ -50,13 +50,17 @@ public class UniquePropertyValidator {
     }
 
     public void checkDuplicate(String username, String ssn, String phone, String email) {
-        if (userRepository.existsByUsername(username)) {
+
+        if(userRepository.existsByUsername(username)){
             throw new ConflictException(String.format(ErrorMessages.ALREADY_REGISTER_MESSAGE_USERNAME, username));
-        } else if (userRepository.existsBySsn(ssn)) {
+        }
+        if(userRepository.existsBySsn(ssn)){
             throw new ConflictException(String.format(ErrorMessages.ALREADY_REGISTER_MESSAGE_SSN, ssn));
-        } else if (userRepository.existsByPhone(phone)) {
+        }
+        if(userRepository.existsByPhoneNumber(phone)){
             throw new ConflictException(String.format(ErrorMessages.ALREADY_REGISTER_MESSAGE_PHONE, phone));
-        } else if (userRepository.existsByEmail(email)) {
+        }
+        if(userRepository.existsByEmail(email)){
             throw new ConflictException(String.format(ErrorMessages.ALREADY_REGISTER_MESSAGE_EMAIL, email));
         }
 

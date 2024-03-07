@@ -23,7 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,13 +50,15 @@ public class UserService {
 
         if (userRole.equalsIgnoreCase(RoleType.ADMIN.name())) {
 
-            if (Objects.equals(userRequest.getUsername(), "SuperAdmin")) {
+            if (Objects.equals(userRequest.getUsername(), "Admin")) {
                 user.setBuilt_in(true);
             }
+
+            //!!! admin rolu veriliyor
             user.setUserRole(userRoleService.getUserRole(RoleType.ADMIN));
-        } else if (userRole.equalsIgnoreCase("Dean")) {
+        } else if (userRole.equalsIgnoreCase("Manager")) {
             user.setUserRole(userRoleService.getUserRole(RoleType.MANAGER));
-        } else if (userRole.equalsIgnoreCase("ViceDean")) {
+        } else if (userRole.equalsIgnoreCase("AssistenManager")) {
             user.setUserRole(userRoleService.getUserRole(RoleType.ASSISTANT_MANAGER));
         } else {
             throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_USERROLE_MESSAGE, userRole));
@@ -118,17 +122,17 @@ public class UserService {
         methodHelper.checkBuiltIn(user);
 
         //!!! duplicate control yani username-ssn-phoneNumber-email unique mi ??
-        uniquePropertyValidator.checkUniqueProperties(user,userRequest);
+        uniquePropertyValidator.checkUniqueProperties(user, userRequest);
 
         //!!! DTO -> POJO
-        User updatedUser=userMapper.mapUserRequestToUpdatedUser(userRequest,userId);
+        User updatedUser = userMapper.mapUserRequestToUpdatedUser(userRequest, userId);
 
         //!!! password'u encode etmemiz gerekli yani hashlenmeli
         updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         //!!! kullanıcını user role bilgisini getir
         updatedUser.setUserRole(user.getUserRole());
-        User savedUser=userRepository.save(updatedUser);
+        User savedUser = userRepository.save(updatedUser);
 
         return ResponseMessage.<BaseUserResponse>builder()
                 .message(SuccessMessages.USER_UPDATE_MESSAGE)
@@ -163,5 +167,19 @@ public class UserService {
 
         String message = SuccessMessages.USER_UPDATE;
         return ResponseEntity.ok(message);
+    }
+
+    public List<UserResponse> getUserByName(String name) {
+
+        return userRepository.getUserByNameContaining(name)//Bu kod ile List<User> yapıda User'lar yani POJO class dönüyor. Biz user'ı userresponse'a çevirmek istiyoruz .
+                .stream()//Burada stream yapıda user yani pojolar gelmeye başladı,tür dönüşümü yapılıyor ve dönen değer -> Stream<User>
+                .map(userMapper::mapUserToUserResponse)//Stream yapıda içteki datanın türünü değiştirmek için map kullanılır. POJO ->DTO Burada dönen değer -> Stream<UserResponse>
+                .collect(Collectors.toList());//List yapıda userResponse'lar dönüyor.
+
+    }
+
+    //!!! Runner tarafi icin yazildi
+    public long countAllAdmins() {
+        return userRepository.countAdmin(RoleType.ADMIN);
     }
 }

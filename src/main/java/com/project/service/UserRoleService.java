@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.lang.module.ResolutionException;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -24,6 +25,10 @@ public class UserRoleService {
     }
 
     public List<UserRole> getAllUserRoles(){
+        return userRoleRepository.findAll();
+    }
+
+    public List<UserRole> getAllUserRole(){
         return userRoleRepository.findAll();
     }
 }

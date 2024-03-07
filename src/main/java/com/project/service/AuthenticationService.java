@@ -41,15 +41,20 @@ public class AuthenticationService {
         //!!! Gelen requestin icinden kullanici adi ve parola bilgisi aliniyor
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
+
         // !!! authenticationManager uzerinden kullaniciyi valide ediyoruz
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+
         // !!! valide edilen kullanici Context e atiliyor
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         // !!! JWT token olusturuluyor
         String token = "Bearer " + jwtUtils.generateJwtToken(authentication);
+
         // !!! login islemini gerceklestirilen kullaniciya ulasiliyor
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
         // !!!  Response olarak login islemini yapan kullaniciyi donecegiz gerekli fieldlar setleniyor
 
         // !!! GrantedAuthority turundeki role yapisini String turune ceviriliyor
