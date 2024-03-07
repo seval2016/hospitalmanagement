@@ -15,8 +15,11 @@ import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 import com.project.service.UserRoleService;
 import com.project.service.helper.MethodHelper;
+import com.project.service.helper.PageableHelper;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +40,7 @@ public class UserService {
     private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
     private final MethodHelper methodHelper;
+    private final PageableHelper pageableHelper;
 
     public ResponseMessage<UserResponse> saveUser(UserRequest userRequest, String userRole) {
 
@@ -74,6 +78,35 @@ public class UserService {
         return ResponseMessage.<UserResponse>builder()
                 .message(SuccessMessages.USER_CREATED)
                 .object(userMapper.mapUserToUserResponse(savedUser))
+                .build();
+    }
+
+    public Page<UserResponse> getUsersByPage(int page, int size, String sort, String type, String userRole) {
+        Pageable pageable= pageableHelper.getPageableWithProperties(page, size, sort, type);
+
+        return userRepository.findByUserByRole(userRole, pageable)
+                .map(userMapper::mapUserToUserResponse);
+    }
+
+    public ResponseMessage<BaseUserResponse> getUserById(Long userId) {
+
+        BaseUserResponse baseUserResponse = null;
+
+        User user = userRepository.findById(userId).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_USER_MESSAGE, userId)));
+
+        if(user.getUserRole().getRoleType() == RoleType.PATIENT){
+            baseUserResponse = userMapper.mapUserToPatientResponse(user);
+        } else if (user.getUserRole().getRoleType() == RoleType.DOCTOR) {
+            baseUserResponse = userMapper.mapUserToDoctorResponse(user);
+        } else {
+            baseUserResponse = userMapper.mapUserToUserResponse(user);
+        }
+
+        return ResponseMessage.<BaseUserResponse>builder()
+                .message(SuccessMessages.USER_FOUND)
+                .httpStatus(HttpStatus.OK)
+                .object(baseUserResponse)
                 .build();
     }
 
@@ -182,4 +215,6 @@ public class UserService {
     public long countAllAdmins() {
         return userRepository.countAdmin(RoleType.ADMIN);
     }
+
+
 }

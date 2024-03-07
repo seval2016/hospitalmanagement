@@ -4,6 +4,8 @@ import com.project.entity.concretes.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.request.user.UserRequestWithoutPassword;
+import com.project.payload.response.user.DoctorResponse;
+import com.project.payload.response.user.PatientResponse;
 import com.project.payload.response.user.UserResponse;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,43 @@ public class UserMapper {
                 .gender(userRequest.getGender())
                 .email(userRequest.getEmail())
                 .built_in(userRequest.getBuiltIn())
+                .build();
+    }
+
+    public PatientResponse mapUserToPatientResponse(User patient){
+
+        return PatientResponse.builder()
+                .userId(patient.getId())
+                .username(patient.getUsername())
+                .name(patient.getName())
+                .surname(patient.getSurname())
+                .birthDay(patient.getBirthDay())
+                .birthPlace(patient.getBirthPlace())
+                .phoneNumber(patient.getPhoneNumber())
+                .gender(patient.getGender())
+                .email(patient.getEmail())
+                .fatherName(patient.getFatherName())
+                .motherName(patient.getMotherName())
+                .patientNumber(patient.getPatientNumber())
+                .isActive(patient.isActive())
+                .build();
+    }
+
+    public DoctorResponse mapUserToDoctorResponse(User doctor){
+
+        return DoctorResponse.builder()
+                .userId(doctor.getId())
+                .username(doctor.getUsername())
+                .name(doctor.getName())
+                .surname(doctor.getSurname())
+                .birthDay(doctor.getBirthDay())
+                .birthPlace(doctor.getBirthPlace())
+                .ssn(doctor.getSsn())
+                .phoneNumber(doctor.getPhoneNumber())
+                .gender(doctor.getGender())
+                .email(doctor.getEmail())
+                .treatmentPlans(doctor.getTreatmentPlanList())
+                .isChiefDoctor(doctor.getIsChiefDoctor())
                 .build();
     }
 
