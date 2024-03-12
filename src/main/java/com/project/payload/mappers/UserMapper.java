@@ -118,4 +118,23 @@ public class UserMapper {
                 .gender(doctorRequest.getGender())
                 .build();
     }
+
+    public User mapDoctorRequestToUpdatedUser(DoctorRequest doctorRequest,Long userId){
+
+        return User.builder()
+                .id(userId)
+                .username(doctorRequest.getUsername())
+                .name(doctorRequest.getName())
+                .surname(doctorRequest.getSurname())
+                .password(doctorRequest.getPassword())
+                .ssn(doctorRequest.getSsn())
+                .birthDay(doctorRequest.getBirthDay())
+                .birthPlace(doctorRequest.getBirthPlace())
+                .phoneNumber(doctorRequest.getPhoneNumber())
+                .gender(doctorRequest.getGender())
+                .email(doctorRequest.getEmail())
+                .isChiefDoctor(doctorRequest.getIsChiefDoctor())
+                .built_in(doctorRequest.getBuiltIn())
+                .build();
+    }
 }

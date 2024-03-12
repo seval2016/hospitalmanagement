@@ -2,6 +2,7 @@ package com.project.repository.user;
 
 import com.project.entity.concretes.user.User;
 import com.project.entity.enums.RoleType;
+import com.project.payload.response.user.PatientResponse;
 import com.project.payload.response.user.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.userRole.roleName = ?1")
     Page<User> findByUserByRole(String roleName, Pageable pageable);
+
+    List<User> findByPatientDoctorId(Long id);
 }

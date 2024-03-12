@@ -32,7 +32,7 @@ public class MethodHelper {
 
     //!!! Rol kontrolu yapan metod
     public void checkRole(User user, RoleType roleType){
-        if(!user.getUserRole().getRoleType().equals(roleType)){
+        if(!user.getUserRole().getRoleType().equals(roleType)){ //1.parametre de gelen rol, 2.parametre de gelen role eşit değil ise aşağıdaki hatayı fırlat!
             throw new ResourceNotFoundException(
                     String.format(ErrorMessages.NOT_FOUND_USER_WITH_ROLE_MESSAGE, user.getId(), roleType));
         }
@@ -49,9 +49,9 @@ public class MethodHelper {
         return user;
     }
 
-    //!!! Gelen User , Advisor mi kontrolu
-    public void checkAdvisor(User user){
-        if(Boolean.FALSE.equals(user.getIsChiefDoctor())){
+    //!!! Gelen User, Chief Doctor mu kontrolu
+    public void checkChief(User user){
+        if(Boolean.FALSE.equals(user.getIsChiefDoctor())){  //IsChiefDoctor değeri eğer false ise hata fırlatması için nullsafe kontrolü yapıyoruz
             throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CHIEFDOCTOR_MESSAGE, user.getId()));
         }
     }
