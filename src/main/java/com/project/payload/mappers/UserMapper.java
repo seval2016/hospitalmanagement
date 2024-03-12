@@ -2,6 +2,7 @@ package com.project.payload.mappers;
 
 import com.project.entity.concretes.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
+import com.project.payload.request.user.DoctorRequest;
 import com.project.payload.request.user.UserRequest;
 import com.project.payload.request.user.UserRequestWithoutPassword;
 import com.project.payload.response.user.DoctorResponse;
@@ -101,4 +102,20 @@ public class UserMapper {
 
     }
 
+    public User doctorRequestToUser(DoctorRequest doctorRequest) {
+        return User.builder()
+                .name(doctorRequest.getName())
+                .surname(doctorRequest.getSurname())
+                .ssn(doctorRequest.getSsn())
+                .username(doctorRequest.getUsername())
+                .birthDay(doctorRequest.getBirthDay())
+                .birthPlace(doctorRequest.getBirthPlace())
+                .password(doctorRequest.getPassword())
+                .phoneNumber(doctorRequest.getPhoneNumber())
+                .email(doctorRequest.getEmail())
+                .isChiefDoctor(doctorRequest.getIsChiefDoctor())
+                .built_in(doctorRequest.getBuiltIn())
+                .gender(doctorRequest.getGender())
+                .build();
+    }
 }

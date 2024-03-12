@@ -105,11 +105,11 @@ User - User Role
 ----------------
  PatientInfo - TreatmentPlan - Appointment - Department - MedicalRecord
 
-treatment plan -> Tedavi Planı
-Patient Info -> Hasta Bilgisi
-Appointment  -> Randevu
-MedicalRecord ->
-Department ->
+treatment plan -> LessonProgram
+Patient Info -> StudentInfo
+Appointment  -> Meet
+MedicalRecord ->Educationterm
+Department ->lesson
 
 
 Entities and Relationships:

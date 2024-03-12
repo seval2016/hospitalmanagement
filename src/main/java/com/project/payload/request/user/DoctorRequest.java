@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @SuperBuilder
 public class DoctorRequest extends BaseUserRequest {
-    @NotNull(message = "Please select Threatment Plan")
-    private Set<TreatmentPlan> treatmentPlans;
+    @NotNull(message = "Please select Threatment ")
+    private Set<Long> treatmentIdList;
 
     @NotNull(message = "Please select Chief Doctor")
     private Boolean isChiefDoctor;

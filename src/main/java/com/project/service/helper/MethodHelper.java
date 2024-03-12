@@ -28,7 +28,7 @@ public class MethodHelper {
         }
     }
 
-   /*
+
 
     //!!! Rol kontrolu yapan metod
     public void checkRole(User user, RoleType roleType){
@@ -51,8 +51,8 @@ public class MethodHelper {
 
     //!!! Gelen User , Advisor mi kontrolu
     public void checkAdvisor(User user){
-        if(Boolean.FALSE.equals(user.getIsAdvisor())){
-            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_ADVISOR_MESSAGE, user.getId()));
+        if(Boolean.FALSE.equals(user.getIsChiefDoctor())){
+            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CHIEFDOCTOR_MESSAGE, user.getId()));
         }
-    }*/
+    }
 }
