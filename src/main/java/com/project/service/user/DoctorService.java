@@ -141,7 +141,7 @@ public class DoctorService {
 
     }
 
-    public ResponseMessage<UserResponse> deleteChiefDoctorById(Long chiefDoctorId) {
+    public ResponseMessage<UserResponse> deleteChiefDoctorById(Long chiefDoctorId) { //bir sorun yaşarsan 11. video ya bak
         //!!! aranan user var mı yok mu yani id kontrolu
         User doctor = methodHelper.isUserExist(chiefDoctorId);
 
@@ -156,14 +156,25 @@ public class DoctorService {
         userRepository.save(doctor);
 
         //silinen başhekimin hastaları varsa bu ilişkiyi koparmak lazım
+        List<User> allPatients=userRepository.findByPatientDoctorId(chiefDoctorId);
 
+        if(allPatients.isEmpty()){
+            allPatients.forEach(patient -> patient.setIsChiefDoctor(null));
+        }
 
-        return ResponseMessage.<DoctorResponse>builder()
-                .message(SuccessMessages.CHIEF_DOCTOR_SAVE)
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.CHIEF_DOCTOR_DELETE)
                 .httpStatus(HttpStatus.OK)
-                .object(userMapper.mapUserToDoctorResponse(savedDoctor))
+                .object(userMapper.mapUserToUserResponse(doctor))
                 .build();
+    }
 
+    //Tüm doktorlar
+    public List<UserResponse> getAllDoctor() {
+        return userRepository.findAllDoctor()
+                .stream()
+                .map(userMapper::mapUserToUserResponse)
+                .collect(Collectors.toList());
 
     }
 }

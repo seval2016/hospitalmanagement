@@ -52,13 +52,20 @@ public class DoctorController {
             return doctorService.saveChiefDoctor(doctorId);
     }
 
+
+    //Chief doctor olan doktorun bu özelliğini false yapacağız yani bir doktorun başhekimliğini kaldırıyoruz
+    //Normalde doctor entity'si silinmiyor entity içerisindeki bir değer değişiyor bu yüzden UserResponse döndürüyoruz
     @DeleteMapping("/deleteChiefDoctorById/{doktorId}")//http://localhost:8080/doctor/deleteChiefDoctorById/1
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
-    //Normalde doctor entity'si silinmiyor entity içerisindeki bir değer değişiyor bu yüzden UserResponsedöndürüyoruz
+
     public ResponseMessage<UserResponse> deleteChiefDoctorById(@PathVariable Long chiefDoctorId){
         return doctorService.deleteChiefDoctorById(chiefDoctorId);
 
     }
 
-
+    @GetMapping("/getAllDoctor")//http://localhost:8080/doctor/getAllDoctor
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
+    public List<UserResponse> getAllDoctor() {
+        return doctorService.getAllDoctor();
+    }
 }
