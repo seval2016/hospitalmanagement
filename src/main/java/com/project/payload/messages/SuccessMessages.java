@@ -29,14 +29,14 @@ public class SuccessMessages {
     public static final String EDUCATION_TERM_DELETE = "Education Term is Deleted Successfully";
     public static final String EDUCATION_TERM_UPDATE = "Education Term is updated successfully ";
 
-    public static final String LESSON_SAVED = "Lesson is Saved Successfully";
-    public static final String LESSON_DELETE = "Lesson is Deleted Successfully";
-    public static final String LESSON_FOUND = "Lesson is Found Successfully";
+    public static final String DEPARTMENT_SAVED = "Department is Saved Successfully";
+    public static final String DEPARTMENT_DELETE = "Department is Deleted Successfully";
+    public static final String DEPARTMENT_FOUND = "Department is Found Successfully";
 
-    public static final String LESSON_PROGRAM_SAVED = "Lesson Program is Saved Successfully";
-    public static final String LESSON_PROGRAM_DELETE = "Lesson Program is Deleted Successfully";
-    public static final String LESSON_PROGRAM_ADD_TO_PATIENT = "Lesson Program added to student";
-    public static final String LESSON_PROGRAM_ADD_TO_DOCTOR = "Lesson Program added to doctor";
+    public static final String TREATMENT_PLAN_SAVED = "Treatment Plan is Saved Successfully";
+    public static final String TREATMENT_PLAN_DELETE = "Treatment Plan is Deleted Successfully";
+    public static final String TREATMENT_PLAN_ADD_TO_PATIENT = "Treatment Plan added to student";
+    public static final String TREATMENT_PLAN_ADD_TO_DOCTOR = "Treatment Plan added to doctor";
 
 
     public static final String PATIENT_INFO_SAVED = "Patient Info is Saved Successfully";
@@ -44,8 +44,8 @@ public class SuccessMessages {
     public static final String PATIENT_INFO_UPDATE = "Patient Info is Updated Successfully";
 
 
-    public static final String MEET_SAVED = "Meet is Saved Successfully";
-    public static final String MEET_FOUND = "Meet is Found Successfully";
-    public static final String MEET_DELETE = "Meet is Deleted Successfully";
-    public static final String MEET_UPDATE = "Meet is Updated Successfully";
+    public static final String APPOINTMENT_SAVED = "Appointment is Saved Successfully";
+    public static final String APPOINTMENT_FOUND = "Appointment is Found Successfully";
+    public static final String APPOINTMENT_DELETE = "Appointment is Deleted Successfully";
+    public static final String APPOINTMENT_UPDATE = "Appointment is Updated Successfully";
 }

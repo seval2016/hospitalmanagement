@@ -27,16 +27,16 @@ public class ErrorMessages {
     public static final String EDUCATION_TERM_NOT_FOUND_MESSAGE ="Error: Education Term with id %s not found";
 
 
-    public static final String LESSON_ALREADY_EXIST_WITH_LESSON_NAME = "Lesson with Lesson Name %s is already exist";
-    public static final String NOT_FOUND_LESSON_MESSAGE = "Error: Lesson with this field %s is not found";
+    public static final String DEPARTMENT_ALREADY_EXIST_WITH_DEPARTMENT_NAME = "DEPARTMENT with Department Name %s is already exist";
+    public static final String NOT_FOUND_DEPARTMENT_MESSAGE = "Error: Department with this field %s is not found";
 
-    public static final String NOT_FOUND_LESSON_IN_LIST = "Error: Lesson not found in the list";
+    public static final String NOT_FOUND_DEPARTMENT_IN_LIST = "Error: Department not found in the list";
     public static final String TIME_NOT_VALID_MESSAGE = "Error: incorrect time";
 
 
-    public static final String NOT_FOUND_LESSON_PROGRAM_MESSAGE = "ERROR : Lesson program with this field %s not found";
-    public static final String NOT_FOUND_LESSON_PROGRAM_MESSAGE_WITHOUT_ID_INFO="Error: Lesson program with this field not found";
-    public static final String LESSON_PROGRAM_ALREADY_EXIST ="Error: Course schedule can not be selected for the same hour and date";
+    public static final String NOT_FOUND_TREATMENT_PLAN_MESSAGE = "ERROR : Treatment Plan with this field %s not found";
+    public static final String NOT_FOUND_TREATMENT_PLAN_MESSAGE_WITHOUT_ID_INFO="Error: Treatment Plan with this field not found";
+    public static final String TREATMENT_PLAN_ALREADY_EXIST ="Error: Course schedule can not be selected for the same hour and date";
 
 
     public static final String PATIENT_INFO_NOT_FOUND = "Error: Patient Info with id %s not found";
@@ -44,8 +44,8 @@ public class ErrorMessages {
 
 
 
-    public static final String MEET_HOURS_CONFLICT = "Error: Meet hours has conflict with existing meets";
-    public static final String MEET_NOT_FOUND_MESSAGE = "Error: Meet with id %d not found" ;
+    public static final String APPOINTMENT_HOURS_CONFLICT = "Error: Appointment hours has conflict with existing appointments";
+    public static final String APPOINTMENT_NOT_FOUND_MESSAGE = "Error: Appointment with id %d not found" ;
 
 
 }

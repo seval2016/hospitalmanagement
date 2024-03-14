@@ -2,9 +2,7 @@ package com.project.payload.mappers;
 
 import com.project.entity.concretes.user.User;
 import com.project.payload.request.abstracts.BaseUserRequest;
-import com.project.payload.request.user.DoctorRequest;
-import com.project.payload.request.user.UserRequest;
-import com.project.payload.request.user.UserRequestWithoutPassword;
+import com.project.payload.request.user.*;
 import com.project.payload.response.user.DoctorResponse;
 import com.project.payload.response.user.PatientResponse;
 import com.project.payload.response.user.UserResponse;
@@ -14,8 +12,8 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     //User'ı UserResponse'a çevireceğiz. Yani POJO ---> DTO çevirilecek
-    public UserResponse mapUserToUserResponse(User user){
-        return  UserResponse.builder()
+    public UserResponse mapUserToUserResponse(User user) {
+        return UserResponse.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .name(user.getName())
@@ -30,8 +28,7 @@ public class UserMapper {
                 .build();
     }
 
-    public User mapUserRequestToUser(BaseUserRequest userRequest){
-
+    public User mapUserRequestToUser(BaseUserRequest userRequest) {
         return User.builder()
                 .username(userRequest.getUsername())
                 .name(userRequest.getName())
@@ -47,7 +44,7 @@ public class UserMapper {
                 .build();
     }
 
-    public PatientResponse mapUserToPatientResponse(User patient){
+    public PatientResponse mapUserToPatientResponse(User patient) {
 
         return PatientResponse.builder()
                 .userId(patient.getId())
@@ -66,7 +63,7 @@ public class UserMapper {
                 .build();
     }
 
-    public DoctorResponse mapUserToDoctorResponse(User doctor){
+    public DoctorResponse mapUserToDoctorResponse(User doctor) {
 
         return DoctorResponse.builder()
                 .userId(doctor.getId())
@@ -84,7 +81,7 @@ public class UserMapper {
                 .build();
     }
 
-    public User mapUserRequestToUpdatedUser(UserRequest userRequest, Long userId){
+    public User mapUserRequestToUpdatedUser(UserRequest userRequest, Long userId) {
 
         return User.builder()
                 .id(userId)
@@ -99,7 +96,6 @@ public class UserMapper {
                 .gender(userRequest.getGender())
                 .email(userRequest.getEmail())
                 .build();
-
     }
 
     public User doctorRequestToUser(DoctorRequest doctorRequest) {
@@ -119,7 +115,7 @@ public class UserMapper {
                 .build();
     }
 
-    public User mapDoctorRequestToUpdatedUser(DoctorRequest doctorRequest,Long userId){
+    public User mapDoctorRequestToUpdatedUser(DoctorRequest doctorRequest, Long userId) {
 
         return User.builder()
                 .id(userId)
@@ -136,5 +132,36 @@ public class UserMapper {
                 .isChiefDoctor(doctorRequest.getIsChiefDoctor())
                 .built_in(doctorRequest.getBuiltIn())
                 .build();
+    }
+
+    public User mapPatientRequestToUser(PatientRequest patientRequest) {
+        return User.builder()
+                .fatherName(patientRequest.getFatherName())
+                .motherName(patientRequest.getMotherName())
+                .birthDay(patientRequest.getBirthDay())
+                .birthPlace(patientRequest.getBirthPlace())
+                .name(patientRequest.getName())
+                .surname(patientRequest.getSurname())
+                .ssn(patientRequest.getSsn())
+                .email(patientRequest.getEmail())
+                .phoneNumber(patientRequest.getPhoneNumber())
+                .gender(patientRequest.getGender())
+                .built_in(patientRequest.getBuiltIn())
+                .build();
+    }
+
+
+    public User mapPatientRequestToUpdatedUser( PatientRequestWithoutPassword patientRequest) {
+        return User.builder()
+                .motherName(patientRequest.getMotherName())
+                .fatherName(patientRequest.getFatherName())
+                .birthDay(patientRequest.getBirthDay())
+                .birthPlace(patientRequest.getBirthPlace())
+                .gender(patientRequest.getGender())
+                .name(patientRequest.getName())
+                .surname(patientRequest.getSurname())
+                .ssn(patientRequest.getSsn())
+                .build();
+
     }
 }
