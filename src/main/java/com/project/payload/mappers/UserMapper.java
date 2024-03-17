@@ -142,6 +142,8 @@ public class UserMapper {
                 .birthPlace(patientRequest.getBirthPlace())
                 .name(patientRequest.getName())
                 .surname(patientRequest.getSurname())
+                .password(patientRequest.getPassword())
+                .username(patientRequest.getUsername())
                 .ssn(patientRequest.getSsn())
                 .email(patientRequest.getEmail())
                 .phoneNumber(patientRequest.getPhoneNumber())

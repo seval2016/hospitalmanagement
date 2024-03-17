@@ -38,7 +38,11 @@ public class PatientService {
 
         //!!! DTO -> POJO
         User patient = userMapper.mapPatientRequestToUser(patientRequest);
+
+        //request'den gelen password'u encode ediyoruz
         patient.setPassword(passwordEncoder.encode(patientRequest.getPassword()));
+
+        //!!! bu user'a ait setlemediğim eksik field'ları setliyoruz
         patient.setUserRole(userRoleService.getUserRole(RoleType.PATIENT));
         patient.setActive(true);
         patient.setPatientNumber(getLastNumber());
