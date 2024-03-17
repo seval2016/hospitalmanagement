@@ -28,13 +28,13 @@ public class PatientController {
     }
 
     //!!! patient kendi bilgilerini guncellemesi
-    @PatchMapping("/update")
+    @PatchMapping("/update") //http://localhost:8080/patient/update
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     public ResponseEntity<String> updatePatient(@RequestBody @Valid PatientRequestWithoutPassword patientRequestWithoutPassword, HttpServletRequest request) {
         return patientService.updatePatient(patientRequestWithoutPassword, request);
     }
 
-    @PatchMapping("/update/{userId}")
+    @PutMapping("/update/{userId}") //http://localhost:8080/patient/update/2
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
     public ResponseMessage<PatientResponse> updatePatientForManagers(@PathVariable Long userId,
                                                                      @RequestBody @Valid PatientRequest patientRequest) {

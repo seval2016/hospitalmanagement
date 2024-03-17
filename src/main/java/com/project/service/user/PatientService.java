@@ -47,7 +47,7 @@ public class PatientService {
         patient.setActive(true);
         patient.setPatientNumber(getLastNumber());
 
-        return ResponseMessage.<PatientResponse>builder()
+        return ResponseMessage. <PatientResponse>builder()
                 .object(userMapper.mapUserToPatientResponse(userRepository.save(patient)))
                 .message(SuccessMessages.PATIENT_SAVED)
                 .build();
@@ -80,8 +80,9 @@ public class PatientService {
         return ResponseEntity.ok(message);
     }
 
-
     public ResponseMessage<PatientResponse> updatePatientForManagers(PatientRequest patientRequest, Long userId) {
+
+        //!!! Kullanıcıdan gelen user var mı yok mu kontrolü
         User user = methodHelper.isUserExist(userId);
 
         //!!! istekten gelen user in rolu patient mi ?
@@ -90,6 +91,7 @@ public class PatientService {
         //!!! Unique kontrolü
         uniquePropertyValidator.checkUniqueProperties(user,patientRequest);
 
+        //!!! DTO -> POJO dönüşüm yapıyoruz
         user.setName(patientRequest.getName());
         user.setSurname(patientRequest.getSurname());
         user.setBirthDay(patientRequest.getBirthDay());
@@ -99,7 +101,7 @@ public class PatientService {
         user.setGender(patientRequest.getGender());
         user.setMotherName(patientRequest.getMotherName());
         user.setFatherName(patientRequest.getFatherName());
-        user.setPassword(patientRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(patientRequest.getPassword()));
 
         return  ResponseMessage.<PatientResponse>builder()
                 .message(SuccessMessages.PATIENT_UPDATE)
