@@ -1,34 +1,28 @@
-package com.project.entity.concretes.business;
+package com.project.payload.request.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
-
-@Entity
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class MedicalRecord {
+public class MedicalRecordRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    //entity'den aldığımız veriler de id kaldırıyoruz çünkü kullanıcı id'yi bilemez ?
+    //Bu bilgi db ye gitmeyecek service katında POJO ya çevrilecek ve tür dönüşümünden sonra db ye gidecek dolayısıyla format için anotation yazarsak gereksiz olur.
 
     @NotNull(message = "Diagnosis information must not be empty")
-    private String diagnosis; //teşhis
+    private String diagnosis;
 
     @NotNull(message = "Prescription information must not be empty")
-    private String prescription;// reçete
+    private String prescription;
 
     @NotNull(message = "Start Date must not be empty")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -47,16 +41,4 @@ public class MedicalRecord {
 
     @NotNull(message = "Imaging test results information must not be empty")
     private String imagingTestResults;//Görüntüleme test sonuçları
-
-
-     //burada treatmentplan ilişkisi kurulacak.
-     //Bir medicalRecord kaydediliyorsa treatmenPlan'larda kaydedilsin eğer siliniyorsa treatmenPlan'lar da silinsin demek istiyorsak CascadeType.ALL kullanırız.
-
-     //JsonProperty kısmında jsonignore da diyebiliriz. Bu kısımda response tarafına yazılmasını engeller ve bu durum sonsun döngü hatasını almamamızı sağlar.
-
-    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<TreatmentPlan> treatmenPlans;
-
-
 }
