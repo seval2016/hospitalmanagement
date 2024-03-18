@@ -47,7 +47,7 @@ public class PatientService {
         patient.setActive(true);
         patient.setPatientNumber(getLastNumber());
 
-        return ResponseMessage. <PatientResponse>builder()
+        return ResponseMessage.<PatientResponse>builder()
                 .object(userMapper.mapUserToPatientResponse(userRepository.save(patient)))
                 .message(SuccessMessages.PATIENT_SAVED)
                 .build();
@@ -65,17 +65,17 @@ public class PatientService {
 
     public ResponseEntity<String> updatePatient(PatientRequestWithoutPassword patientRequest, HttpServletRequest request) {
 
-        String username= (String) request.getAttribute("username");
-        User patient=userRepository.findByUsernameEquals(username);
+        String username = (String) request.getAttribute("username");
+        User patient = userRepository.findByUsernameEquals(username);
 
         //!!! unique kontrol
-        uniquePropertyValidator.checkUniqueProperties(patient,patientRequest);
+        uniquePropertyValidator.checkUniqueProperties(patient, patientRequest);
 
         //!!! DTO -> POJO
         User updatedPatient = userMapper.mapPatientRequestToUpdatedUser(patientRequest);
 
         userRepository.save(patient);
-        String message=SuccessMessages.USER_UPDATE;
+        String message = SuccessMessages.USER_UPDATE;
 
         return ResponseEntity.ok(message);
     }
@@ -86,10 +86,10 @@ public class PatientService {
         User user = methodHelper.isUserExist(userId);
 
         //!!! istekten gelen user in rolu patient mi ?
-        methodHelper.checkRole(user,RoleType.PATIENT);
+        methodHelper.checkRole(user, RoleType.PATIENT);
 
         //!!! Unique kontrolü
-        uniquePropertyValidator.checkUniqueProperties(user,patientRequest);
+        uniquePropertyValidator.checkUniqueProperties(user, patientRequest);
 
         //!!! DTO -> POJO dönüşüm yapıyoruz
         user.setName(patientRequest.getName());
@@ -103,42 +103,54 @@ public class PatientService {
         user.setFatherName(patientRequest.getFatherName());
         user.setPassword(passwordEncoder.encode(patientRequest.getPassword()));
 
-        return  ResponseMessage.<PatientResponse>builder()
+        return ResponseMessage.<PatientResponse>builder()
                 .message(SuccessMessages.PATIENT_UPDATE)
                 .object(userMapper.mapUserToPatientResponse(userRepository.save(user)))
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
 
-    public ResponseMessage changeStatusOfPatient(Long patientId,boolean status){
-        User patient=methodHelper.isUserExist(patientId);
-        methodHelper.checkRole(patient,RoleType.PATIENT);
+    public ResponseMessage changeStatusOfPatient(Long patientId, boolean status) {
+        User patient = methodHelper.isUserExist(patientId);
+        methodHelper.checkRole(patient, RoleType.PATIENT);
 
         patient.setActive(status);
         userRepository.save(patient);
 
+        /* !!! Önemli :
+
+        put   -> setlemediğimiz bütün datalar null olur
+        patch -> setlemediğimiz bütün datalar durumunu korur.
+        Yukarıdaki mappingler tamamen semantic yapılardır. Yani kullanıcıya controller tarafında bilgi verıyoruz. Kullanıcı ön bir bilgiye sahip olur. Fakat put mapping yaparken istersek setlemediğimiz tüm verilerin nulll olmamasını da sağlayabiliriz. Yani patch mapping yaparken istersek setlemediğimiz tüm verilerin nulll olmasını da sağlayabiliriz.
+
+        Setleme yaptığımız değişken db den geliyorsa (ki yukarı da db den geliyorsa) bu %100 patch mapping'dir.
+        DB üzerinden gelen değişken üzerinden değil de (genelde update metodlarında yaptıgımız gibi) DTO -> POJO dönüşümü yaparken dönen POJO db den gelmiyor. DTO'dan dönüşen POJO üzerinde setleme yapıyoruz. Böyle bir surumda "save" dersek bütün dataları güncellememiz gerekli çünkü aksi halde put mapping gibi davrandığı için tüm verileri null'a çeker.
+
+        */
+
         return ResponseMessage.builder()
-                .message("Patient is" + (status ? "active" : "passive"))
+                .message("Patient is " + (status ? "active" : "passive"))
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
 
+    //TODO : addTreatmentPlanToPatientTreatmenPlan
 
     public ResponseMessage<PatientResponse> addTreatmentPlanToPatient(String username, ChooseTreatmentPlanWithId chooseTreatmentPlanWithId) {
 
         // !!! username kontrolu
-        User patient=methodHelper.isUserExistByUsername(username);
+        User patient = methodHelper.isUserExistByUsername(username);
 
         // !!! talep edilen lessonProgramlar getiriliyor
         //!!! TODO: Treatment Plan Ekle
 
-        User savedPatient =userRepository.save(patient);
+        User savedPatient = userRepository.save(patient);
 
-            return ResponseMessage.<PatientResponse>builder()
-                    .message(SuccessMessages.TREATMENT_PLAN_ADD_TO_PATIENT)
-                    .object(userMapper.mapUserToPatientResponse(savedPatient))
-                    .httpStatus(HttpStatus.OK)
-                    .build();
+        return ResponseMessage.<PatientResponse>builder()
+                .message(SuccessMessages.TREATMENT_PLAN_ADD_TO_PATIENT)
+                .object(userMapper.mapUserToPatientResponse(savedPatient))
+                .httpStatus(HttpStatus.OK)
+                .build();
 
 
     }
