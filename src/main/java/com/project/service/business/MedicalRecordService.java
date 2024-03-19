@@ -2,12 +2,16 @@ package com.project.service.business;
 
 import com.project.entity.concretes.business.MedicalRecord;
 import com.project.exception.BadRequestException;
-import com.project.exception.ConflictException;
+
+import com.project.payload.mappers.MedicalRecordMapper;
 import com.project.payload.messages.ErrorMessages;
+import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.MedicalRecordRequest;
 import com.project.payload.response.business.MedicalRecordResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.MedicalRecordRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +20,21 @@ import org.springframework.stereotype.Service;
 public class MedicalRecordService {
 
     private final MedicalRecordRepository medicalRecordRepository;
+    private final MedicalRecordMapper medicalRecordMapper;
 
-    public ResponseEntity<MedicalRecordResponse> saveMedicalRecord(MedicalRecordRequest medicalRecordRequest) {
+    public ResponseMessage<MedicalRecordResponse> saveMedicalRecord(MedicalRecordRequest medicalRecordRequest) {
 
         //!!! kayıtlarda zaman çakışmalarını önlemek için validation yapıldı
         validateMedicalRecordDates(medicalRecordRequest);
 
+        // DTO -> POJO
+        MedicalRecord saveMedicalRecord = medicalRecordRepository.save(medicalRecordMapper.mapMedicalRecordRequestToMedicalRecord(medicalRecordRequest));
 
+        return ResponseMessage.<MedicalRecordResponse>builder()
+                .message(SuccessMessages.MEDICAL_RECORD_SAVED)
+                .httpStatus(HttpStatus.CREATED)
+                .object(medicalRecordMapper.mapMedicalRecordToMedicalRecordResponse(saveMedicalRecord))
+                .build();
     }
 
     private void validateMedicalRecordDatesForRequest(MedicalRecordRequest medicalRecordRequest) {
@@ -49,18 +61,17 @@ public class MedicalRecordService {
         if (medicalRecordRepository.findByYear(medicalRecordRequest.getStartDate().getYear())
                 .stream()
                 .anyMatch(medicalRecord ->
-                        (        medicalRecord.getStartDate().equals(medicalRecordRequest.getStartDate()) //!!! 1. kontrol : baslama tarihleri ayni ise --> mr1(10 kasim 2023) / Yeni eklenen MR(10 kasim 2023)
-                            || (medicalRecord.getStartDate().isBefore(medicalRecordRequest.getStartDate()) //!!! 2. kontrol : Request'den gelen baslama tarihi db'de bulunan mr'nin baslama ve bitis tarihi ortasinda ise -->
-                                      && medicalRecord.getEndDate().isAfter(medicalRecordRequest.getStartDate())) // Ornek : mr1 ( baslama 10 kasim 2023 - bitme 20 kasim 2023)  - Yeni MR ( baslama 15 kasim 2023 bitme 25 kasim 2023)
-                            || (medicalRecord.getStartDate().isBefore(medicalRecordRequest.getEndDate()) //!!! 3. kontrol bitis tarihi  mevcuttun baslama ve bitis tarihi ortasinda ise
-                                       && medicalRecord.getEndDate().isAfter(medicalRecordRequest.getEndDate()))// Ornek : mr1 ( baslama 10 kasim 2023 - bitme 20 kasim 2023)  - Yeni MR ( baslama 09 kasim 2023 bitme 15 kasim 2023)
-                            || (medicalRecord.getStartDate().isAfter(medicalRecordRequest.getStartDate())  //!!!4.kontrol : yeni eklenecek eskiyi tamamen kapsiyorsa
-                                       && medicalRecord.getEndDate().isBefore(medicalRecordRequest.getEndDate()))//mr1 ( baslama 10 kasim 2023 - bitme 20 kasim 2023)  - Yeni MR ( baslama 09 kasim 2023 bitme 25 kasim 2023)
+                        (medicalRecord.getStartDate().equals(medicalRecordRequest.getStartDate()) //!!! 1. kontrol : baslama tarihleri ayni ise --> mr1(10 kasim 2023) / Yeni eklenen MR(10 kasim 2023)
+                                || (medicalRecord.getStartDate().isBefore(medicalRecordRequest.getStartDate()) //!!! 2. kontrol : Request'den gelen baslama tarihi db'de bulunan mr'nin baslama ve bitis tarihi ortasinda ise -->
+                                && medicalRecord.getEndDate().isAfter(medicalRecordRequest.getStartDate())) // Ornek : mr1 ( baslama 10 kasim 2023 - bitme 20 kasim 2023)  - Yeni MR ( baslama 15 kasim 2023 bitme 25 kasim 2023)
+                                || (medicalRecord.getStartDate().isBefore(medicalRecordRequest.getEndDate()) //!!! 3. kontrol bitis tarihi  mevcuttun baslama ve bitis tarihi ortasinda ise
+                                && medicalRecord.getEndDate().isAfter(medicalRecordRequest.getEndDate()))// Ornek : mr1 ( baslama 10 kasim 2023 - bitme 20 kasim 2023)  - Yeni MR ( baslama 09 kasim 2023 bitme 15 kasim 2023)
+                                || (medicalRecord.getStartDate().isAfter(medicalRecordRequest.getStartDate())  //!!!4.kontrol : yeni eklenecek eskiyi tamamen kapsiyorsa
+                                && medicalRecord.getEndDate().isBefore(medicalRecordRequest.getEndDate()))//mr1 ( baslama 10 kasim 2023 - bitme 20 kasim 2023)  - Yeni MR ( baslama 09 kasim 2023 bitme 25 kasim 2023)
 
-                ))
-        ){
+                        ))
+        ) {
             throw new BadRequestException(ErrorMessages.MEDICAL_RECORD_CONFLICT_MESSAGE);
-
         }
 
 

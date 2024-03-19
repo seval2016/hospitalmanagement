@@ -2,6 +2,7 @@ package com.project.controller.business;
 
 import com.project.payload.request.business.MedicalRecordRequest;
 import com.project.payload.response.business.MedicalRecordResponse;
+import com.project.payload.response.business.ResponseMessage;
 import com.project.service.business.MedicalRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class MedicalRecordController {
 
     @PostMapping("/save")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')") //http://localhost:8080/medicalRecords/save
-    public ResponseEntity<MedicalRecordResponse> saveMedicalRecord(@RequestBody @Valid MedicalRecordRequest MedicalRecordRequest) {
+    public ResponseMessage<MedicalRecordResponse> saveMedicalRecord(@RequestBody @Valid MedicalRecordRequest MedicalRecordRequest) {
         return medicalRecordService.saveMedicalRecord(MedicalRecordRequest);
     }
 

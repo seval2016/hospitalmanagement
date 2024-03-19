@@ -25,9 +25,9 @@ public class SuccessMessages {
     public static final String PATIENT_SAVED = "Patient is Saved Successfully";
     public static final String PATIENT_UPDATE = "Patient is updated successfully ";
 
-    public static final String EDUCATION_TERM_SAVED = "Education Term is Saved Successfully";
-    public static final String EDUCATION_TERM_DELETE = "Education Term is Deleted Successfully";
-    public static final String EDUCATION_TERM_UPDATE = "Education Term is updated successfully ";
+    public static final String MEDICAL_RECORD_SAVED = "Medical Record is Saved Successfully";
+    public static final String MEDICAL_RECORD_DELETE = "Medical Record is Deleted Successfully";
+    public static final String MEDICAL_RECORD_UPDATE = "Medical Record is updated successfully ";
 
     public static final String DEPARTMENT_SAVED = "Department is Saved Successfully";
     public static final String DEPARTMENT_DELETE = "Department is Deleted Successfully";
