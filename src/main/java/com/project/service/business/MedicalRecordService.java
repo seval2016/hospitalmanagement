@@ -11,7 +11,10 @@ import com.project.payload.request.business.MedicalRecordRequest;
 import com.project.payload.response.business.MedicalRecordResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.MedicalRecordRepository;
+import com.project.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ public class MedicalRecordService {
 
     private final MedicalRecordRepository medicalRecordRepository;
     private final MedicalRecordMapper medicalRecordMapper;
+    private final PageableHelper pageableHelper;
 
     public ResponseMessage<MedicalRecordResponse> saveMedicalRecord(MedicalRecordRequest medicalRecordRequest) {
 
@@ -98,5 +102,25 @@ public class MedicalRecordService {
                 .stream()
                 .map(medicalRecordMapper::mapMedicalRecordToMedicalRecordResponse)
                 .collect(Collectors.toList());//List<MedicalRecordResponse>
+    }
+
+
+    public Page<MedicalRecordResponse> getAllMedicalRecordByPage(int page, int size, String sort, String type) {
+
+        Pageable pageable=pageableHelper.getPageableWithProperties(page,size,sort,type);
+
+        return medicalRecordRepository.findAll(pageable) //db den gelen pojo tipi olan verıyo dto ya ceviriliyor
+                .map(medicalRecordMapper::mapMedicalRecordToMedicalRecordResponse);
+    }
+
+    public ResponseMessage deleteMedicalRecordById(Long id) {
+
+        isMedicalRecordExist(id);
+        medicalRecordRepository.deleteById(id);
+
+        return ResponseMessage.builder()
+                .message(SuccessMessages.MEDICAL_RECORD_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
 }
