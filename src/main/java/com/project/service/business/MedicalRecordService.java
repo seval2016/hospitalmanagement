@@ -3,6 +3,7 @@ package com.project.service.business;
 import com.project.entity.concretes.business.MedicalRecord;
 import com.project.exception.BadRequestException;
 
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.MedicalRecordMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
@@ -12,8 +13,10 @@ import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.MedicalRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,4 +81,22 @@ public class MedicalRecordService {
     }
 
 
+    public MedicalRecordResponse getMedicalRecordById(Long id) {
+
+        MedicalRecord record=isMedicalRecordExist(id);
+        return medicalRecordMapper.mapMedicalRecordToMedicalRecordResponse(record);
+    }
+
+    private MedicalRecord isMedicalRecordExist(Long id){
+        return  medicalRecordRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.MEDICAL_RECORD_NOT_FOUND_MESSAGE)));
+    }
+
+    public List<MedicalRecordResponse> getAllMedicalRecords() {
+
+        return  medicalRecordRepository.findAll()
+                .stream()
+                .map(medicalRecordMapper::mapMedicalRecordToMedicalRecordResponse)
+                .collect(Collectors.toList());//List<MedicalRecordResponse>
+    }
 }
