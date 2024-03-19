@@ -34,5 +34,12 @@ public class MedicalRecordMapper {
                 .build();
     }
 
+    public MedicalRecord mapMedicalRecordRequestToUpdatedMedicalRecord(Long id,MedicalRecordRequest medicalRecordRequest){
+        return mapMedicalRecordRequestToMedicalRecord(medicalRecordRequest)
+                .toBuilder()
+                .id(id)
+                .build();
+
+    }
 
 }

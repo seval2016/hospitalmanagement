@@ -50,7 +50,13 @@ public class MedicalRecordController {
 
     @DeleteMapping("delete/{id}")//http://localhost:8080/medicalRecords/delete/1
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseMessage deleteMedicalRecordById(@PathVariable Long id){
+    public ResponseMessage deleteMedicalRecordById(@PathVariable Long id) {
         return medicalRecordService.deleteMedicalRecordById(id);
+    }
+
+    @PutMapping("/update/{id}") //http://localhost:8080/medicalRecords/update/1 + JSON
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+    public ResponseMessage<MedicalRecordResponse> updateMedicalRecordById(@RequestBody @Valid MedicalRecordRequest medicalRecordRequest, @PathVariable Long id) {
+        return medicalRecordService.updateMedicalRecordById(medicalRecordRequest, id);
     }
 }

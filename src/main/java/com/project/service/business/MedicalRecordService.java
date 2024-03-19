@@ -123,4 +123,25 @@ public class MedicalRecordService {
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
+
+    public ResponseMessage<MedicalRecordResponse> updateMedicalRecordById(MedicalRecordRequest medicalRecordRequest, Long id) {
+
+        //!!! id var mi ??
+        isMedicalRecordExist(id);
+
+        //!!! tarihler arasinda cakisma var mi ??
+        validateMedicalRecordDates(medicalRecordRequest);
+
+        MedicalRecord medicalRecordUpdated=medicalRecordRepository.save(medicalRecordMapper.mapMedicalRecordRequestToUpdatedMedicalRecord(id,medicalRecordRequest));
+
+        return ResponseMessage.<MedicalRecordResponse>builder()
+                .message(SuccessMessages.MEDICAL_RECORD_UPDATE)
+                .httpStatus(HttpStatus.OK)
+                .object(medicalRecordMapper.mapMedicalRecordToMedicalRecordResponse(medicalRecordUpdated))
+                .build();
+    }
+
+    public MedicalRecord findMedicalRecordById(Long id){
+        return isMedicalRecordExist(id);
+    }
 }
