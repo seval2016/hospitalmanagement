@@ -1,5 +1,6 @@
 package com.project.service.user;
 
+import com.project.entity.concretes.business.TreatmentPlan;
 import com.project.entity.concretes.user.User;
 import com.project.entity.enums.RoleType;
 import com.project.payload.mappers.UserMapper;
@@ -11,7 +12,9 @@ import com.project.payload.response.business.ResponseMessage;
 import com.project.payload.response.user.PatientResponse;
 import com.project.repository.user.UserRepository;
 import com.project.service.UserRoleService;
+import com.project.service.business.TreatmentPlanService;
 import com.project.service.helper.MethodHelper;
+import com.project.service.validator.DateTimeValidator;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class PatientService {
     private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
     private final MethodHelper methodHelper;
+    private final TreatmentPlanService treatmentPlanService;
+    private final DateTimeValidator dateTimeValidator;
 
     public ResponseMessage<PatientResponse> savePatient(PatientRequest patientRequest) {
 
@@ -134,15 +140,23 @@ public class PatientService {
                 .build();
     }
 
-    //TODO : addTreatmentPlanToPatientTreatmenPlan
-
-    public ResponseMessage<PatientResponse> addTreatmentPlanToPatient(String username, ChooseTreatmentPlanWithId chooseTreatmentPlanWithId) {
+    public ResponseMessage<PatientResponse> addTreatmentPlanToPatient(HttpServletRequest httpServletRequest, ChooseTreatmentPlanWithId chooseTreatmentPlanWithId) {
 
         // !!! username kontrolu
+        String username=(String) httpServletRequest.getAttribute("username");
         User patient = methodHelper.isUserExistByUsername(username);
 
-        // !!! talep edilen lessonProgramlar getiriliyor
-        //!!! TODO: Treatment Plan Ekle
+        //!!! Talep edilen Treatmen Planları getir
+        Set<TreatmentPlan>  treatmentPlanSet=treatmentPlanService.getTreatmentPlanById(chooseTreatmentPlanWithId.getTreatmentPlanId());
+
+        //!!! mevcuttaki Treatment Planları getir
+        Set<TreatmentPlan> patientCurrentTreatmentPlan= patient.getTreatmentPlanList();
+
+        //!!! talep edilen ile mevcutta olan arasında bir çakışma var mı?
+        dateTimeValidator.checkTreatmentPlans(patientCurrentTreatmentPlan,treatmentPlanSet);
+
+        patientCurrentTreatmentPlan.addAll(treatmentPlanSet);
+        patient.setTreatmentPlanList(patientCurrentTreatmentPlan);
 
         User savedPatient = userRepository.save(patient);
 

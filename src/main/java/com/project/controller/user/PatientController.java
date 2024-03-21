@@ -49,12 +49,13 @@ public class PatientController {
         return patientService.changeStatusOfPatient(id, status);
     }
 
-    // !!! Patient kendine Treatment Plan ekliyor
+    // !!! Patient'e Treatment Plan eklemek istediğinde aşağıdaki endpoint tetiklenecek
     @PostMapping("/addTreatmentPlanToPatient")// http://localhost:8080/patient/addTreatmentPlanToPatient + JSON
     @PreAuthorize("hasAnyAuthority('PATIENT')")
-    public ResponseMessage<PatientResponse> addTreatmentPlan(HttpServletRequest httpServletRequest,@RequestBody @Valid ChooseTreatmentPlanWithId chooseTreatmentPlanWithId){
-        String username=(String) httpServletRequest.getAttribute("username");
-        return patientService.addTreatmentPlanToPatient(username,chooseTreatmentPlanWithId);
+    public ResponseMessage<PatientResponse> addTreatmentPlan(HttpServletRequest httpServletRequest,
+                                                             @RequestBody @Valid ChooseTreatmentPlanWithId chooseTreatmentPlanWithId){
+
+        return patientService.addTreatmentPlanToPatient(httpServletRequest,chooseTreatmentPlanWithId);
     }
 
 

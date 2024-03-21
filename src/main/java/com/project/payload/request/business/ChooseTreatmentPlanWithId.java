@@ -13,6 +13,6 @@ import java.util.Set;
 @Builder(toBuilder = true)
 public class ChooseTreatmentPlanWithId {
     @NotNull(message = "Please select Treatment Plan")
-    @Size(min = 1, message = "Lesson must not be empty")
+    @Size(min = 1, message = "Treatment Plan must not be empty")
     private Set<Long> treatmentPlanId;
 }

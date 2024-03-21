@@ -1,5 +1,6 @@
 package com.project.service.user;
 
+import com.project.entity.concretes.business.TreatmentPlan;
 import com.project.entity.concretes.user.User;
 import com.project.entity.enums.RoleType;
 import com.project.exception.ConflictException;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,12 +40,8 @@ public class DoctorService {
 
     public ResponseMessage<DoctorResponse> saveDoctor(DoctorRequest doctorRequest) {
 
-        // !!!  ThreatmentPlan Kontrolü yapılacak
-
-        treatmentPlanService.getTreatmentPlanById(doctorRequest.getTreatmentPlanIdList());
-
-
-
+        // !!! ThreatmentPlan getirme işlemi yapılıyor
+       Set<TreatmentPlan> treatmentPlanSet= treatmentPlanService.getTreatmentPlanById(doctorRequest.getTreatmentPlanIdList());
 
         //!!! unique kontrolü
         uniquePropertyValidator.checkDuplicate(doctorRequest.getUsername(), doctorRequest.getSsn(), doctorRequest.getPhoneNumber(), doctorRequest.getEmail());
@@ -56,7 +54,8 @@ public class DoctorService {
         // Bundan dolayı bu kısımda da dto da olmayan role bilgisini setliyoruz
         doctor.setUserRole(userRoleService.getUserRole(RoleType.DOCTOR));
 
-        //TODO: ThreatmentPlan setleme işlemi yapılacak
+        //ThreatmentPlan'den gelen verileri setleme işlemi yapılacak
+        doctor.setTreatmentPlanList(treatmentPlanSet);
 
         //pasword encode etme
         doctor.setPassword(passwordEncoder.encode(doctorRequest.getPassword()));
@@ -84,7 +83,8 @@ public class DoctorService {
         //!!! Parametre de gelen user rolü (endpointi tetiklemesi gerekn kişi) Doctor mu ?
         methodHelper.checkRole(user, RoleType.DOCTOR);
 
-        //TODO: treatment planlar getiriliyor
+        // !!! ThreatmentPlan getirme işlemi yapılıyor
+        Set<TreatmentPlan> treatmentPlanSet= treatmentPlanService.getTreatmentPlanById(doctorRequest.getTreatmentPlanIdList());
 
         //!!! Unique kontrolü yapılıyor
         uniquePropertyValidator.checkUniqueProperties(user, doctorRequest);
@@ -95,7 +95,8 @@ public class DoctorService {
         //!!! password encode etme
         updatedDoctor.setPassword(passwordEncoder.encode(doctorRequest.getPassword()));
 
-        //TODO: treatment planlar setlenecek
+        //!!! treatment plan setlenıyor
+        updatedDoctor.setTreatmentPlanList(treatmentPlanSet);
 
         //!!! PutMapping yaptıgımız için Rol Bilgisini setliyoruz
         updatedDoctor.setUserRole(userRoleService.getUserRole(RoleType.DOCTOR));
