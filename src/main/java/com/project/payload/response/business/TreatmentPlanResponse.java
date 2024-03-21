@@ -33,6 +33,6 @@ public class TreatmentPlanResponse {
     private Set<Department> departments;
     private MedicalRecord medicalRecord;
     private Set<DoctorResponse> doctors;
-    private Set <PatientResponse> patients;
+    private Set<PatientResponse> patients;
 
 }

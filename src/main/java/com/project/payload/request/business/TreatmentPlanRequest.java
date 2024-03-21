@@ -38,6 +38,12 @@ public class TreatmentPlanRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
     private LocalDateTime endDate;
 
+    @NotNull(message = "Treatment Method must not be empty")
+    private String treatmentMethod;
+
+    @NotNull(message = "Medications must not be empty")
+    private List<String> medications;
+
     @NotNull(message = "Please Select Department")
     @Size(min=1, message = "Department must not be empty")
     private Set<Long> departmentIdList;

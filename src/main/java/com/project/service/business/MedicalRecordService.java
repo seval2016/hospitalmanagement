@@ -141,6 +141,7 @@ public class MedicalRecordService {
                 .build();
     }
 
+    //NOt: Aşağıdaki gibi bir servis katında bir metodda pojo dönüyorsa bunun sebebi ya o kod kötü koddur yada başka bir servise hizmet etmek için yazılmıştır.
     public MedicalRecord findMedicalRecordById(Long id){
         return isMedicalRecordExist(id);
     }

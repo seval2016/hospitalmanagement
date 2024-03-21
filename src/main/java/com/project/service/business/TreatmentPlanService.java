@@ -48,9 +48,8 @@ public class TreatmentPlanService {
         //!!! Medical Record bilgisi cekiliyor.
         MedicalRecord medicalRecord = medicalRecordService.findMedicalRecordById(treatmentPlanRequest.getMedicalRecordId());
 
-        //!!! yukarda gelen department ici bos olma kontrolu :
+        //!!! yukarıda gelen department ici bos olma kontrolu :
         if (departments.isEmpty()) {
-
             throw new ResourceNotFoundException(ErrorMessages.NOT_FOUND_DEPARTMENT_IN_LIST);
         }
         //!!! zaman kontrolu
@@ -58,10 +57,10 @@ public class TreatmentPlanService {
                 treatmentPlanRequest.getEndDate());
 
         //!!! DTO -> POJO
-        TreatmentPlan treatmentPlan=
-                treatmentPlanMapper.mapTreatmentPlanRequestToTreatmentPlan(treatmentPlanRequest,departments,medicalRecord);
+        TreatmentPlan treatmentPlan =
+                treatmentPlanMapper.mapTreatmentPlanRequestToTreatmentPlan(treatmentPlanRequest, departments, medicalRecord);
 
-        TreatmentPlan savedTreatmentPlan=treatmentPlanRepository.save(treatmentPlan);
+        TreatmentPlan savedTreatmentPlan = treatmentPlanRepository.save(treatmentPlan);
         return ResponseMessage.<TreatmentPlanResponse>builder()
                 .message(SuccessMessages.TREATMENT_PLAN_SAVED)
                 .httpStatus(HttpStatus.CREATED)
@@ -83,7 +82,7 @@ public class TreatmentPlanService {
     }
 
     private TreatmentPlan isTreatmentPlanExistById(Long id) {
-        return treatmentPlanRepository.findById(id).orElseThrow(()->
+        return treatmentPlanRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE)));
     }
 
@@ -105,14 +104,14 @@ public class TreatmentPlanService {
     }
 
     public Page<TreatmentPlanResponse> getAllTreatmentPlanByPage(int page, int size, String sort, String type) {
-        Pageable pageable = pageableHelper.getPageableWithProperties(page,size,sort,type);
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         return treatmentPlanRepository.findAll(pageable)
                 .map(treatmentPlanMapper::mapTreatmentPlanToTreatmentPlanResponse);
 
     }
 
     public Set<TreatmentPlanResponse> getAllTreatmentPlanByUser(HttpServletRequest httpServletRequest) {
-        String userName= (String) httpServletRequest.getAttribute("username");
+        String userName = (String) httpServletRequest.getAttribute("username");
         return treatmentPlanRepository.getTreatmentPlanByUsersUsername(userName)
                 .stream()
                 .map(treatmentPlanMapper::mapTreatmentPlanToTreatmentPlanResponse)
@@ -120,7 +119,7 @@ public class TreatmentPlanService {
     }
 
     public Set<TreatmentPlanResponse> getByDoctorId(Long doctorId) {
-        User doctor= methodHelper.isUserExist(doctorId);
+        User doctor = methodHelper.isUserExist(doctorId);
         methodHelper.checkRole(doctor, RoleType.DOCTOR);
         return treatmentPlanRepository.findByUsers_IdEquals(doctorId)
                 .stream()
@@ -129,25 +128,24 @@ public class TreatmentPlanService {
     }
 
     public Set<TreatmentPlanResponse> getByPatientId(Long patientId) {
-        User patient=methodHelper.isUserExist(patientId);
-        methodHelper.checkRole(patient,RoleType.PATIENT);
+        User patient = methodHelper.isUserExist(patientId);
+        methodHelper.checkRole(patient, RoleType.PATIENT);
 
-        return  treatmentPlanRepository.findByUsers_IdEquals(patientId)
+        return treatmentPlanRepository.findByUsers_IdEquals(patientId)
                 .stream()
                 .map(treatmentPlanMapper::mapTreatmentPlanToTreatmentPlanResponse)
                 .collect(Collectors.toSet());
     }
 
     //!!! Doctor service için yazıldı
-    public Set<TreatmentPlan> getTreatmentPlanById(Set<Long> departmentIdSet){
-        Set<TreatmentPlan> treatmentPlans=treatmentPlanRepository.getTreatmentPlanByPlanIdList(departmentIdSet);
+    public Set<TreatmentPlan> getTreatmentPlanById(Set<Long> departmentIdSet) {
+        Set<TreatmentPlan> treatmentPlans = treatmentPlanRepository.getTreatmentPlanByPlanIdList(departmentIdSet);
 
-        if(treatmentPlans.isEmpty()){
+        if (treatmentPlans.isEmpty()) {
             throw new BadRequestException(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE_WITHOUT_ID_INFO);
         }
         return treatmentPlans;
     }
-
 
 
 }

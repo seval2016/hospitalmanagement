@@ -25,17 +25,20 @@ public class TreatmentPlanController {
     public ResponseMessage<TreatmentPlanResponse> saveTreatmentPlan(@RequestBody @Valid TreatmentPlanRequest treatmentPlanRequest){
         return  treatmentPlanService.saveTreatmentPlan(treatmentPlanRequest);
     }
+
     @GetMapping("/getAll") // http://localhost:8080/treatmentPlans/getAll
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','DOCTOR','PATIENT')")
     public List<TreatmentPlanResponse> getAllTreatmentPlanList(){
         return treatmentPlanService.getAllTreatmentPlanByList();
     }
+
     @GetMapping("/getById/{id}")// http://localhost:8080/treatmentPlans/getById/1
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
     public TreatmentPlanResponse getTreatmentPlanById(@PathVariable Long id){
         return treatmentPlanService.getTreatmentPlanById(id);
 
     }
+
     @GetMapping("/getAllUnassigned")// http://localhost:8080/treatmentPlans/getAllUnassigned
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','DOCTOR','PATIENT')")
     public List<TreatmentPlanResponse> getAllAssigned(){
