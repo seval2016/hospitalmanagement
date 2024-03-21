@@ -2,6 +2,7 @@ package com.project.entity.concretes.business;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.entity.concretes.user.User;
+import com.project.entity.enums.Day;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,28 +27,27 @@ public class TreatmentPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private Day day;
+
     // Tedavi planı bilgileri
+    @NotNull(message = "Plan Details must not be empty")
     private String planDetails;
 
     @NotNull(message = "Start Date must not be empty")
     @Column(name = "start_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
     private LocalDateTime startDate;
 
     @NotNull(message = "End Date must not be empty")
     @Column(name = "end_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
     private LocalDateTime endDate;
 
     @NotNull(message = "Treatment Method must not be empty")
     private String treatmentMethod; //Tedavi yöntemi
 
-    @NotNull(message = "Treatment Duration must not be empty")
-    private Duration treatmentDuration; //Tedavi süresi
-
-    @ElementCollection
-    @CollectionTable(name = "treatment_plan_medications", joinColumns = @JoinColumn(name = "treatment_plan_id"))
-    @Column(name = "medication")
+    @NotNull(message = "Medications must not be empty")
     private List<String> medications;
 
 
