@@ -117,6 +117,8 @@ public class TreatmentPlanService {
 
     public Set<TreatmentPlanResponse> getAllTreatmentPlanByUser(HttpServletRequest httpServletRequest) {
         String userName = (String) httpServletRequest.getAttribute("username");
+
+        //User tablosunda Users sütunun Username'i httpServletRequest'den gelen username'e eşit ise
         return treatmentPlanRepository.getTreatmentPlanByUsersUsername(userName)
                 .stream()
                 .map(treatmentPlanMapper::mapTreatmentPlanToTreatmentPlanResponse)

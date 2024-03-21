@@ -72,8 +72,9 @@ public class TreatmentPlanController {
     return treatmentPlanService.getAllTreatmentPlanByPage(page,size,sort,type);
    }
 
-    @GetMapping("/getAllTreatmentPlanByDoctor")
-    @PreAuthorize("hasAnyAuthority('DOCTOR')")// http://localhost:8080/treatmentPlans/getAllTreatmentPlanByDoctor
+   //Bir doktor kendisine ait olan treatment planları getiriyor
+    @GetMapping("/getAllTreatmentPlanByDoctor")// http://localhost:8080/treatmentPlans/getAllTreatmentPlanByDoctor
+    @PreAuthorize("hasAnyAuthority('DOCTOR')")
     public Set<TreatmentPlanResponse> getAllTreatmentPlanByDoctorUsername(HttpServletRequest httpServletRequest){
         return treatmentPlanService.getAllTreatmentPlanByUser(httpServletRequest);
     }
@@ -85,13 +86,13 @@ public class TreatmentPlanController {
         return treatmentPlanService.getAllTreatmentPlanByUser(httpServletRequest);
    }
 
-   @GetMapping("/getAllTreatmentPlanDoctorId/{doctorId}")
+   @GetMapping("/getAllTreatmentPlanByDoctorId/{doctorId}") // http://localhost:8080/treatmentPlans/getAllTreatmentPlanByDoctorId/3
    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
     public Set<TreatmentPlanResponse> getByDoctorId(@PathVariable Long doctorId){
         return treatmentPlanService.getByDoctorId(doctorId);
    }
 
-   @GetMapping("/getAllTreatmentPlanDoctorId/{patientId}")
+   @GetMapping("/getAllTreatmentPlanByPatientId/{patientId}") // http://localhost:8080/treatmentPlans/getAllTreatmentPlanByPatientId/3
    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
     public Set<TreatmentPlanResponse> getByPatientId(@PathVariable Long patientId){
         return treatmentPlanService.getByPatientId(patientId);
