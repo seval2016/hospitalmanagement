@@ -82,7 +82,7 @@ public class TreatmentPlanService {
 
     private TreatmentPlan isTreatmentPlanExistById(Long id) {
         return treatmentPlanRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE,id)));
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE, id)));
     }
 
     public List<TreatmentPlanResponse> getAllUnassigned() {
@@ -145,15 +145,14 @@ public class TreatmentPlanService {
     }
 
     //!!! Doctor service için yazıldı
-    public Set<TreatmentPlan> getTreatmentPlanById(Set<Long> departmentIdSet) {
-        Set<TreatmentPlan> treatmentPlans = treatmentPlanRepository.getTreatmentPlanByPlanIdList(departmentIdSet);
+    public Set<TreatmentPlan> getTreatmentPlanById(Set<Long> treatmentPlanIdSet) {
+        Set<TreatmentPlan> treatmentPlans = treatmentPlanRepository.getTreatmentPlanByTreatmenPlanIdList(treatmentPlanIdSet);
 
         if (treatmentPlans.isEmpty()) {
             throw new BadRequestException(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE_WITHOUT_ID_INFO);
         }
         return treatmentPlans;
     }
-
 
 
 }

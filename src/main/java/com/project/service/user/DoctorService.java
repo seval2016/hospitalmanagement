@@ -14,6 +14,7 @@ import com.project.payload.response.user.UserResponse;
 import com.project.repository.user.UserRepository;
 
 import com.project.service.UserRoleService;
+import com.project.service.business.TreatmentPlanService;
 import com.project.service.helper.MethodHelper;
 import com.project.service.validator.UniquePropertyValidator;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,16 @@ public class DoctorService {
     private final UserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
     private final MethodHelper methodHelper;
+    private final TreatmentPlanService treatmentPlanService;
 
     public ResponseMessage<DoctorResponse> saveDoctor(DoctorRequest doctorRequest) {
 
-        // !!! TODO : ThreatmentPlan Kontrolü yapılacak
+        // !!!  ThreatmentPlan Kontrolü yapılacak
+
+        treatmentPlanService.getTreatmentPlanById(doctorRequest.getTreatmentPlanIdList());
+
+
+
 
         //!!! unique kontrolü
         uniquePropertyValidator.checkDuplicate(doctorRequest.getUsername(), doctorRequest.getSsn(), doctorRequest.getPhoneNumber(), doctorRequest.getEmail());

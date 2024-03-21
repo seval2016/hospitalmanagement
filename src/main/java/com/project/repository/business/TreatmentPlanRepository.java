@@ -22,6 +22,6 @@ public interface TreatmentPlanRepository extends JpaRepository<TreatmentPlan, Lo
 
 
     // SQL --> SELECT * FROM treatmen_plan WHERE treatmen_plan.id IN (2,3)
-    @Query("SELECT t FROM TreatmentPlan t WHERE t.id IN :departmentIdSet")
-    Set<TreatmentPlan> getTreatmentPlanByPlanIdList(Set<Long> departmentIdSet);
+    @Query("SELECT t FROM TreatmentPlan t WHERE t.id IN :treatmentPlanIdSet")
+    Set<TreatmentPlan> getTreatmentPlanByTreatmenPlanIdList(Set<Long> treatmentPlanIdSet);
 }
