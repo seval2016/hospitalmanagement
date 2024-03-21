@@ -11,6 +11,7 @@ import java.util.Set;
 
 @Component
 public class TreatmentPlanMapper {
+
     public TreatmentPlan mapTreatmentPlanRequestToTreatmentPlan(TreatmentPlanRequest treatmentPlanRequest, Set<Department> departments, MedicalRecord medicalRecord) {
 
         return TreatmentPlan.builder()
@@ -18,6 +19,8 @@ public class TreatmentPlanMapper {
                 .planDetails(treatmentPlanRequest.getPlanDetails())
                 .startDate(treatmentPlanRequest.getStartDate())
                 .endDate(treatmentPlanRequest.getEndDate())
+                .treatmentMethod(treatmentPlanRequest.getTreatmentMethod())
+                .medications(treatmentPlanRequest.getMedications())
                 .departments(departments)
                 .medicalRecord(medicalRecord)
                 .build();

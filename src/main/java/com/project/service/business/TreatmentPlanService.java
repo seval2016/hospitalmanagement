@@ -76,23 +76,28 @@ public class TreatmentPlanService {
                 .collect(Collectors.toList());
     }
 
-
     public TreatmentPlanResponse getTreatmentPlanById(Long id) {
         return treatmentPlanMapper.mapTreatmentPlanToTreatmentPlanResponse(isTreatmentPlanExistById(id));
     }
 
     private TreatmentPlan isTreatmentPlanExistById(Long id) {
         return treatmentPlanRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE)));
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_TREATMENT_PLAN_MESSAGE,id)));
     }
 
-    public List<TreatmentPlanResponse> getAllAssigned() {
+    public List<TreatmentPlanResponse> getAllUnassigned() {
         return treatmentPlanRepository.findByUsers_IdNull()
                 .stream()
                 .map(treatmentPlanMapper::mapTreatmentPlanToTreatmentPlanResponse)
                 .collect(Collectors.toList());
     }
 
+    public List<TreatmentPlanResponse> getAllAssigned() {
+        return treatmentPlanRepository.findByUsers_IdNotNull()
+                .stream()
+                .map(treatmentPlanMapper::mapTreatmentPlanToTreatmentPlanResponse)
+                .collect(Collectors.toList());
+    }
 
     public ResponseMessage deleteTreatmentPlanById(Long id) {
         isTreatmentPlanExistById(id);
@@ -146,6 +151,7 @@ public class TreatmentPlanService {
         }
         return treatmentPlans;
     }
+
 
 
 }

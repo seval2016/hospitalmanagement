@@ -39,11 +39,22 @@ public class TreatmentPlanController {
 
     }
 
+    //herhangi bir kullanıcı ataması yapılmamış bütün treatment plan'ları getirme
     @GetMapping("/getAllUnassigned")// http://localhost:8080/treatmentPlans/getAllUnassigned
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','DOCTOR','PATIENT')")
+    public List<TreatmentPlanResponse> getAllUnassigned(){
+        return treatmentPlanService.getAllUnassigned();
+    }
+
+
+    //herhangi bir kullanıcı ataması yapılmış treatment plan'ları getirme
+    @GetMapping("/getAllAssigned")// http://localhost:8080/treatmentPlans/getAllAssigned
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER','DOCTOR','PATIENT')")
     public List<TreatmentPlanResponse> getAllAssigned(){
         return treatmentPlanService.getAllAssigned();
     }
+
+
 
     @DeleteMapping("/delete/{id}")// http://localhost:8080/treatmentPlans/delete/1
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
