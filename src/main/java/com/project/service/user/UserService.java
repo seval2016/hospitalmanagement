@@ -217,4 +217,7 @@ public class UserService {
     }
 
 
+    public User getDoctorByUserName(String doctorUsername) {
+        return userRepository.findByUsername(doctorUsername);
+    }
 }

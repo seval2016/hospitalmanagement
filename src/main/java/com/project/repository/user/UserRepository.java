@@ -17,6 +17,8 @@ import java.util.stream.DoubleStream;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsernameEquals(String username);
 
+    User findByUsername(String Username);
+
     boolean existsByUsername(String username);
 
     boolean existsBySsn(String ssn);
@@ -43,4 +45,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT MAX (u.patientNumber) FROM User u")
     int getMaxStudentNumber();
+
+
 }

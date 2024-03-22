@@ -67,7 +67,7 @@ public class DepartmentService {
                 .build();
     }
 
-    private Department isDepartmentExistById(Long id) {
+    public Department isDepartmentExistById(Long id) {
         return departmentRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_DEPARTMENT_MESSAGE, id)));
     }

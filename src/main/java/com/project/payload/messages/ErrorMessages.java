@@ -2,6 +2,7 @@ package com.project.payload.messages;
 
 public class ErrorMessages {
 
+
     private ErrorMessages() { //bu classdan hiçbir şekilde nesne oluşturulmasın diye yapıldı
     }
     public static final String NOT_PERMITTED_METHOD_MESSAGE = "You do not have any permission to do this operation";

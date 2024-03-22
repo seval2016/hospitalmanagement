@@ -6,6 +6,9 @@ import com.project.entity.concretes.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,10 +24,8 @@ public class PatientInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String bloodType;
 
-    @Column(unique = true)
     private String allergyInfo;
 
     private String currentCondition; //Hasta mevcut durumu ve sağlık sorunları.
