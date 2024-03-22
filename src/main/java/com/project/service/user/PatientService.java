@@ -165,9 +165,5 @@ public class PatientService {
                 .object(userMapper.mapUserToPatientResponse(savedPatient))
                 .httpStatus(HttpStatus.OK)
                 .build();
-
-
     }
 }
-
-
