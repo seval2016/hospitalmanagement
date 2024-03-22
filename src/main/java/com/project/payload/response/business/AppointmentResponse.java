@@ -11,8 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DepartmentResponse {
-
-    private Long id;
-    private String departmentName;
+public class AppointmentResponse {
 }

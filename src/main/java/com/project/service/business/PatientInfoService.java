@@ -11,6 +11,7 @@ import com.project.payload.mappers.PatientInfoMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.PatientInfoRequest;
+import com.project.payload.request.business.UpdatePatientInfoRequest;
 import com.project.payload.response.business.PatientInfoResponse;
 import com.project.payload.response.business.ResponseMessage;
 import com.project.repository.business.PatientInfoRepository;
@@ -18,10 +19,14 @@ import com.project.service.helper.MethodHelper;
 import com.project.service.helper.PageableHelper;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +73,7 @@ public class PatientInfoService {
         PatientInfo savedPatientInfo=patientInfoRepository.save(patientInfo);
         return ResponseMessage.<PatientInfoResponse>builder()
                 .message(SuccessMessages.PATIENT_INFO_SAVED)
-                .object(patientInfoMapper.mapPatientInfoTOPatientInfoResponse(savedPatientInfo))
+                .object(patientInfoMapper.mapPatientInfoToPatientInfoResponse(savedPatientInfo))
                 .httpStatus(HttpStatus.CREATED)
                 .build();
     }
@@ -105,4 +110,72 @@ public class PatientInfoService {
         }
     }
 
+    public Page<PatientInfoResponse> getAllPatientInfoByPage(int page, int size, String sort, String type) {
+        Pageable pageable=pageableHelper.getPageableWithProperties(page, size, sort, type);
+        return patientInfoRepository.findAll(pageable)
+                .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse);
+    }
+
+    public List<PatientInfoResponse> getPatientInfoByPatientId(Long patientId) {
+        User patient=methodHelper.isUserExist(patientId);
+
+        //!!! Gelen user Patient rolüne sahip mi ?
+        methodHelper.checkRole(patient,RoleType.PATIENT);
+
+        //!!! Bu patient'e ait bir patientInfo var mı ?
+        if(!patientInfoRepository.existsByPatient_IdEquals(patientId)){
+            throw new ResourceNotFoundException(
+                    String.format(ErrorMessages.PATIENT_INFO_NOT_FOUND_BY_PATIENT_ID,patientId)
+            );}
+        return patientInfoRepository.findByPatient_IdEquals(patientId)
+                .stream()
+                .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse)
+                .collect(Collectors.toList());
+    }
+
+    public PatientInfoResponse findPatientInfoById(Long patientInfoId) {
+        return patientInfoMapper.mapPatientInfoToPatientInfoResponse(isPatientInfoExistById(patientInfoId));
+    }
+
+    public ResponseMessage<PatientInfoResponse> update(UpdatePatientInfoRequest patientInfoRequest, Long patientInfoId) {
+
+        Department department=departmentService.isDepartmentExistById(patientInfoRequest.getDepartmentId());
+        PatientInfo patientInfo=isPatientInfoExistById(patientInfoId);
+        MedicalRecord medicalRecord=medicalRecordService.findMedicalRecordById(patientInfoRequest.getMedicalRecordId());
+
+        //!!! DTO -> POJO
+        PatientInfo patientInfoUpdate=
+                patientInfoMapper.mapPatientInfoRequestUpdateToPatientInfo(patientInfoRequest,patientInfoId,department,medicalRecord);
+
+        patientInfoUpdate.setDoctor(patientInfo.getDoctor());
+        patientInfoUpdate.setPatient(patientInfo.getPatient());
+
+        PatientInfo updatedPatientInfo= patientInfoRepository.save(patientInfoUpdate);
+
+        return ResponseMessage.<PatientInfoResponse>builder()
+                .message(SuccessMessages.PATIENT_INFO_UPDATE)
+                .httpStatus(HttpStatus.OK)
+                .object(patientInfoMapper.mapPatientInfoToPatientInfoResponse(updatedPatientInfo))
+                .build();
+
+    }
+
+    public Page<PatientInfoResponse> getAllForDoctor(HttpServletRequest httpServletRequest, int page, int size) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size);
+        String userName = (String) httpServletRequest.getAttribute("username");
+
+        return patientInfoRepository.findByDoctorId_UsernameEquals(userName,pageable)
+                .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse);
+
+    }
+
+    public Page<PatientInfoResponse> getAllForPatient(HttpServletRequest httpServletRequest, int page, int size) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page,size);
+        String userName = (String) httpServletRequest.getAttribute("username");
+
+        return patientInfoRepository.findByPatientId_UsernameEquals(userName,pageable)
+                .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse);
+        }
 }

@@ -34,7 +34,7 @@ public class PatientInfo {
 
     private String currentMedications; //Hasta mevcut ilaçları.
 
-    private String InfoNote;//Doktor hastası hakkında not tutmak isterse kullanacağı kısım
+    private String infoNote;//Doktor hastası hakkında not tutmak isterse kullanacağı kısım
 
     private String insuranceCompanyName;
 

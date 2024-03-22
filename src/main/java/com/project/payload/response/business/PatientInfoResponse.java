@@ -28,7 +28,7 @@ public class PatientInfoResponse {
     private String currentCondition;
     private String treatmentHistory;
     private String currentMedications;
-    private String InfoNote;
+    private String infoNote;
     private String insuranceCompanyName;
     private String insurancePolicyNumber;
     private LocalDate upcomingAppointments;
