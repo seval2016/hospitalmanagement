@@ -33,5 +33,6 @@ public class PatientInfoResponse {
     private String insurancePolicyNumber;
     private LocalDate upcomingAppointments;
     private String departmentName;
+    private Long medicalRecordId;
     private PatientResponse patientResponse;
 }

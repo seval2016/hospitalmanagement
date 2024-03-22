@@ -6,8 +6,10 @@ import com.project.entity.concretes.business.PatientInfo;
 import com.project.entity.concretes.user.User;
 import com.project.entity.enums.RoleType;
 import com.project.exception.ConflictException;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.PatientInfoMapper;
 import com.project.payload.messages.ErrorMessages;
+import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.PatientInfoRequest;
 import com.project.payload.response.business.PatientInfoResponse;
 import com.project.payload.response.business.ResponseMessage;
@@ -16,6 +18,7 @@ import com.project.service.helper.MethodHelper;
 import com.project.service.helper.PageableHelper;
 import com.project.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +65,12 @@ public class PatientInfoService {
         patientInfo.setDoctor(doctor);
         patientInfo.setDepartment(department);
 
-
+        PatientInfo savedPatientInfo=patientInfoRepository.save(patientInfo);
+        return ResponseMessage.<PatientInfoResponse>builder()
+                .message(SuccessMessages.PATIENT_INFO_SAVED)
+                .object(patientInfoMapper.mapPatientInfoTOPatientInfoResponse(savedPatientInfo))
+                .httpStatus(HttpStatus.CREATED)
+                .build();
     }
 
     private void checkSameDepartment(Long patientId, String departmentName){
@@ -75,4 +83,26 @@ public class PatientInfoService {
             throw new ConflictException(String.format(ErrorMessages.DEPARTMENT_ALREADY_EXIST_WITH_DEPARTMENT_NAME, departmentName));
         }
     }
+
+    public ResponseMessage deletePatientInfo(Long patientInfoId) {
+
+        PatientInfo patientInfo= isPatientInfoExistById(patientInfoId);
+        patientInfoRepository.deleteById(patientInfoId);
+
+        return ResponseMessage.builder()
+                .message(SuccessMessages.PATIENT_INFO_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+    public PatientInfo isPatientInfoExistById(Long id){
+        boolean isExist=patientInfoRepository.existsByIdEquals(id);
+
+        if(!isExist){
+            throw new ResourceNotFoundException(String.format(ErrorMessages.PATIENT_INFO_NOT_FOUND));
+        }else{
+            return patientInfoRepository.findById(id).get();
+        }
+    }
+
 }
