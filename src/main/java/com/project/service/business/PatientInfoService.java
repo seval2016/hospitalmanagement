@@ -52,7 +52,7 @@ public class PatientInfoService {
         methodHelper.checkRole(patient, RoleType.PATIENT);
 
         //!!! username ile patient getirme
-        User doctor = userService.getDoctorByUserName(doctorUsername);
+        User doctor = userService.getDoctorByUsername(doctorUsername);
 
         // !!! requestten gelen departmentId ile department getiriyoruz
         Department department= departmentService.isDepartmentExistById(patientInfoRequest.getDepartmentId());

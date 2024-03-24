@@ -2,6 +2,8 @@ package com.project.service.business;
 
 import com.project.entity.concretes.business.Appointment;
 import com.project.entity.concretes.user.User;
+import com.project.entity.enums.RoleType;
+import com.project.exception.BadRequestException;
 import com.project.exception.ConflictException;
 import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AppointmentMapper;
@@ -17,6 +19,7 @@ import com.project.service.user.DoctorService;
 import com.project.service.validator.DateTimeValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.project.service.user.UserService;
@@ -49,13 +52,13 @@ public class AppointmentService {
         checkAppointmentConflict(doctorId.getId(), appointmentRequest.getDate(), appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
 
         //!!! Appointment'e katilacak Patient getiriliyor
-        User patients =userService.getPatientById(appointmentRequest.getPatientId());
+        User patients = userService.getPatientById(appointmentRequest.getPatientId());
 
         //!!! DTO -> POJO
-        Appointment appointment=appointmentMapper.mapAppointmentRequestToAppointment(appointmentRequest);
+        Appointment appointment = appointmentMapper.mapAppointmentRequestToAppointment(appointmentRequest);
         appointment.setPatient(patients);
 
-        Appointment savedAppointment=appointmentRepository.save(appointment);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
 
         return ResponseMessage.<AppointmentResponse>builder()
                 .message(SuccessMessages.APPOINTMENT_SAVED)
@@ -107,26 +110,95 @@ public class AppointmentService {
                 .build();
     }
 
-    private Appointment isAppointmentExistById(Long appointmentId){
+    private Appointment isAppointmentExistById(Long appointmentId) {
         return appointmentRepository
                 .findById(appointmentId).orElseThrow(
-                        ()->new ResourceNotFoundException(String.format(ErrorMessages.APPOINTMENT_NOT_FOUND_MESSAGE,appointmentId)));
+                        () -> new ResourceNotFoundException(String.format(ErrorMessages.APPOINTMENT_NOT_FOUND_MESSAGE, appointmentId)));
 
     }
 
     public ResponseMessage delete(Long appointmentId, HttpServletRequest httpServletRequest) {
-        return null;
+        Appointment appointment = isAppointmentExistById(appointmentId);
+
+        isDoctorControl(appointment, httpServletRequest);
+        appointmentRepository.deleteById(appointmentId);
+        return ResponseMessage.builder()
+                .message(SuccessMessages.APPOINTMENT_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+    private void isDoctorControl(Appointment appointment, HttpServletRequest httpServletRequest) {
+        //!!! Doctor ise sadece kendi randevularını silebilsin
+        String userName = (String) httpServletRequest.getAttribute("username");
+        User doctor = methodHelper.isUserExistByUsername(userName);
+        if (
+                (doctor.getUserRole().getRoleType().equals(RoleType.DOCTOR)) && // metodu tetikleyenin Role bilgisi DOKTOR ise
+                        !(appointment.getDoctor().getId().equals(doctor.getId())) // DOCTOR, baskasinin Appointment ini silmeye calisiyorsa
+        ) {
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
     }
 
     public Page<AppointmentResponse> getAllAppointmentByPage(int page, int size) {
-        return null;
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
+        return appointmentRepository.findAll(pageable).map(appointmentMapper::mapAppointmentToAppointmentResponse);
     }
 
     public ResponseMessage<AppointmentResponse> updateAppointmentById(AppointmentRequest appointmentRequest, Long appointmentId, HttpServletRequest httpServletRequest) {
-        return null;
+        Appointment appointment = isAppointmentExistById(appointmentId);
+
+        isDoctorControl(appointment, httpServletRequest);
+
+        dateTimeValidator.checkDateWithException(appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
+        if (!(
+                appointment.getDate().equals(appointmentRequest.getDate()) &&
+                        appointment.getStartTime().equals(appointmentRequest.getStartTime()) &&
+                        appointment.getStopTime().equals(appointmentRequest.getStopTime())
+        )
+        ) {
+
+            checkAppointmentConflict(appointmentRequest.getPatientId(), appointmentRequest.getDate(), appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
+
+            checkAppointmentConflict(appointment.getDoctor().getId(), appointmentRequest.getDate(), appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
+        }
+
+        User patients = userService.getPatientById(appointmentRequest.getPatientId());
+
+        //!!! DTO --> POJO
+        Appointment updatedAppointment = appointmentMapper.mapAppointmentUpdateRequestToAppointment(appointmentRequest, appointmentId);
+        updatedAppointment.setPatient(patients);
+
+        Appointment savedAppointment = appointmentRepository.save(updatedAppointment);
+
+        return ResponseMessage.<AppointmentResponse>builder()
+                .message(SuccessMessages.APPOINTMENT_UPDATE)
+                .httpStatus(HttpStatus.OK)
+                .object(appointmentMapper.mapAppointmentToAppointmentResponse(savedAppointment))
+                .build();
+    }
+
+    public List<AppointmentResponse> getAllAppointmentByDoctor(HttpServletRequest httpServletRequest) {
+        String username = (String) httpServletRequest.getAttribute("username");
+        User doctor = userService.getDoctorByUsername(username);
+        methodHelper.checkRole(doctor, RoleType.DOCTOR);
+
+        return appointmentRepository.getByDoctor_IdEquals(doctor.getId())
+                .stream()
+                .map(appointmentMapper::mapAppointmentToAppointmentResponse)
+                .collect(Collectors.toList());
     }
 
     public List<AppointmentResponse> getAllAppointmentByPatient(HttpServletRequest httpServletRequest) {
-        return null;
+        String userName = (String) httpServletRequest.getAttribute("username");
+        User patient = methodHelper.isUserExistByUsername(userName);
+
+        methodHelper.checkRole(patient, RoleType.PATIENT);
+
+        return appointmentRepository.findByPatientList_IdEquals(patient.getId())
+                .stream()
+                .map(appointmentMapper::mapAppointmentToAppointmentResponse)
+                .collect(Collectors.toList());
+
     }
 }
