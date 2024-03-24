@@ -53,8 +53,7 @@ public class TreatmentPlanService {
             throw new ResourceNotFoundException(ErrorMessages.NOT_FOUND_DEPARTMENT_IN_LIST);
         }
         //!!! zaman kontrolu
-        dateTimeValidator.checkDateWithException(treatmentPlanRequest.getStartDate(),
-                treatmentPlanRequest.getEndDate());
+        dateTimeValidator.checkDateWithException(treatmentPlanRequest.getStartTime(),treatmentPlanRequest.getStopTime());
 
         //!!! DTO -> POJO
         TreatmentPlan treatmentPlan =

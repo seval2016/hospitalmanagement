@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -26,10 +27,16 @@ public class Appointment {
     private Long id;
 
     // Randevu bilgileri
-    private String appointmentDetails;
+    private String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate appointmentDateTime;
+    private LocalDate date;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
+    private LocalTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "HH:mm",timezone = "US")
+    private LocalTime stopTime;
 
     // Bir randevu bir doktora aittir
     @ManyToOne(cascade = CascadeType.PERSIST)

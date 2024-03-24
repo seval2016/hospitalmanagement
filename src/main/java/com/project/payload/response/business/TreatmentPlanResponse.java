@@ -11,7 +11,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.project.entity.enums.Day;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import java.util.List;
 import java.util.Set;
@@ -26,10 +28,12 @@ public class TreatmentPlanResponse {
     private Long treatmentPlanId;
     private Day day;
     private String planDetails;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String treatmentMethod;
     private List<String> medications;
+    private LocalTime startTime;
+    private LocalTime stopTime;
     private Set<Department> departments;
     private MedicalRecord medicalRecord;
     private Set<DoctorResponse> doctors;

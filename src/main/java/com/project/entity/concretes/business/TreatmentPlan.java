@@ -10,7 +10,9 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -37,12 +39,18 @@ public class TreatmentPlan {
     @NotNull(message = "Start Date must not be empty")
     @Column(name = "start_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @NotNull(message = "End Date must not be empty")
     @Column(name = "end_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "US")
+    private LocalTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "US")
+    private LocalTime stopTime;
 
     @NotNull(message = "Treatment Method must not be empty")
     private String treatmentMethod; //Tedavi yöntemi

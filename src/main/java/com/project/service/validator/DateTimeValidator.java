@@ -5,27 +5,29 @@ import com.project.exception.BadRequestException;
 import com.project.payload.messages.ErrorMessages;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
 public class DateTimeValidator {
-    private boolean checkDate(LocalDateTime start, LocalDateTime stop) {
-        return start.isAfter(stop) || start.equals(stop);
+    private boolean checkTime(LocalTime start, LocalTime stop){
+        return start.isAfter(stop) || start.equals(stop) ;
     }
 
-    public void checkDateWithException(LocalDateTime start, LocalDateTime stop) {
-        if (checkDate(start, stop)) {
+    public void checkDateWithException(LocalTime start, LocalTime stop) {
+        if(checkTime(start, stop)){
             throw new BadRequestException(ErrorMessages.TIME_NOT_VALID_MESSAGE);
         }
     }
 
-   /* //!!! Talep edilen yeni treatment planlar arasinda cakisma var mi kontrolu
+  //!!! Talep edilen yeni treatment planlar arasinda cakisma var mi kontrolu
     private void checkDuplicateTreatmentPlans(Set<TreatmentPlan> treatmentPlans) {
-        Set<String> uniqueTreatmentPlanDays = new HashSet<>();//sadece unique olan threatmen plan'ları tutacak
-        Set<LocalDateTime> existingTreatmentPlanStartDates = new HashSet<>(); //Threatment plan başlama günleri burada tutulacak
-        Set<LocalDateTime> existingTreatmentPlanEndDates = new HashSet<>();//Threatment plan bitiş günleri burada tutulacak
+        Set<String> uniqueTreatmentPlanDays = new HashSet<>();
+        Set<LocalTime> existingLessonProgramStartTimes = new HashSet<>();
+        Set<LocalTime> existingLessonProgramStopTimes = new HashSet<>();
 
         for (TreatmentPlan treatmentPlan : treatmentPlans) {
             String treatmentPlanDay = treatmentPlan.getDay().name();
@@ -34,21 +36,21 @@ public class DateTimeValidator {
             if (uniqueTreatmentPlanDays.contains(treatmentPlanDay)) {
 
                 //!!! Baslama saatine gore kontrol
-                for (LocalDateTime startTime : existingTreatmentPlanStartDates) {
+                for (LocalTime startTime : existingLessonProgramStartTimes) {
 
                     //!!! Baslama saatleri esit ise
-                    if (treatmentPlan.getStartDate().equals(startTime)) {
+                    if (treatmentPlan.getStartTime().equals(startTime)) {
                         throw new BadRequestException(ErrorMessages.TREATMENT_PLAN_ALREADY_EXIST);
                     }
 
                     // !!! mevcut treatment Planın başlangıç saati ile diğer bir treatment Planın başlangıç ve bitiş saatleri arasında çakışma olduğunda hata fırlatır.
-                    if (treatmentPlan.getStartDate().isBefore(startTime) && treatmentPlan.getEndDate().isAfter(startTime)) {
+                    if (treatmentPlan.getStartTime().isBefore(startTime)&& treatmentPlan.getStopTime().isAfter(startTime)) {
                         throw new BadRequestException(ErrorMessages.TREATMENT_PLAN_ALREADY_EXIST);
                     }
                 }
                 //!!! Bitis saatine gore kontrol
-                for (LocalDateTime stopDate : existingTreatmentPlanEndDates) {
-                    if (treatmentPlan.getStartDate().isBefore(stopDate) && treatmentPlan.getEndDate().isAfter(stopDate)) {
+                for(LocalTime stopTime : existingLessonProgramStopTimes){
+                        if(treatmentPlan.getStartTime().isBefore(stopTime) && treatmentPlan.getStopTime().isAfter(stopTime)) {
                         throw new BadRequestException(ErrorMessages.TREATMENT_PLAN_ALREADY_EXIST);
                     }
                 }
@@ -56,8 +58,8 @@ public class DateTimeValidator {
             //!!! yukardaki Baslangic ve Bitis saatine gore kontrollerden gecen TreatmenPlan, metodun en basinda olusturulan unique degiskenlere ataniyor
 
             uniqueTreatmentPlanDays.add(treatmentPlanDay);
-            existingTreatmentPlanStartDates.add(treatmentPlan.getStartDate());
-            existingTreatmentPlanEndDates.add(treatmentPlan.getEndDate());
+            existingLessonProgramStartTimes.add(treatmentPlan.getStartTime());
+            existingLessonProgramStopTimes.add(treatmentPlan.getStopTime());
 
         }
 
@@ -69,16 +71,16 @@ public class DateTimeValidator {
                                               Set<TreatmentPlan> treatmentPlanRequest) {
         for (TreatmentPlan requestTreatmentPlan : treatmentPlanRequest) {
             String requestTreatmentPlanDay = requestTreatmentPlan.getDay().name();
-            LocalDateTime requestStart = requestTreatmentPlan.getStartDate();
-            LocalDateTime requestStop = requestTreatmentPlan.getEndDate();
+            LocalTime requestStart = requestTreatmentPlan.getStartTime();
+            LocalTime requestStop = requestTreatmentPlan.getStopTime();
 
             if (existTreatmentPlan.stream()
                     .anyMatch(treatmentPlan ->
-                            treatmentPlan.getDay().name().equals(requestTreatmentPlan)
-                                    && (treatmentPlan.getStartDate().equals(requestStart)
-                                    || (treatmentPlan.getStartDate().isBefore(requestStart) && treatmentPlan.getEndDate().isAfter(requestStop))
-                                    || (treatmentPlan.getStartDate().isAfter(requestStop) && treatmentPlan.getEndDate().isBefore(requestStop))
-                                    || (treatmentPlan.getStartDate().isAfter(requestStart) && treatmentPlan.getEndDate().isBefore(requestStop))))
+                            treatmentPlan.getDay().name().equals(requestTreatmentPlanDay)
+                                    && (treatmentPlan.getStartTime().equals(requestStart)
+                                    || (treatmentPlan.getStartTime().isBefore(requestStart) && treatmentPlan.getStopTime().isAfter(requestStart))
+                                    || (treatmentPlan.getStartTime().isBefore(requestStop) && treatmentPlan.getStopTime().isBefore(requestStop))
+                                    || (treatmentPlan.getStartTime().isAfter(requestStart) && treatmentPlan.getStopTime().isBefore(requestStop))))
             ) {
                 throw new BadRequestException(ErrorMessages.TREATMENT_PLAN_ALREADY_EXIST);
             }
@@ -100,60 +102,6 @@ public class DateTimeValidator {
         }
     }
 
-*/
 
-    // Mevcut tedavi planlarını ve talep edilen tedavi planlarını kontrol eden metot
-    public void checkTreatmentPlans(Set<TreatmentPlan> existingTreatmentPlans, Set<TreatmentPlan> requestedTreatmentPlans) {
-        // Mevcut tedavi planlarının boş olup olmadığını kontrol ediyoruz
-        if (existingTreatmentPlans.isEmpty()) {
-            // Mevcut tedavi plan yoksa, sadece talep edilen tedavi planlarını kontrol etmek yeterlidir
-            checkDuplicateTreatmentPlans(requestedTreatmentPlans);
-        } else {
-            // Mevcut tedavi planlar mevcutsa, çakışma kontrolü için iki aşamalı bir kontrol yapacağız
 
-            // 1. Talep edilen tedavi planlarının içinde çakışma var mı kontrol ediyoruz
-            checkDuplicateTreatmentPlans(requestedTreatmentPlans);
-
-            // 2. Talep edilen tedavi planları ile mevcut tedavi planları arasında çakışma var mı kontrol ediyoruz
-            checkDuplicateTreatmentPlans(existingTreatmentPlans, requestedTreatmentPlans);
-        }
-    }
-
-    // Talep edilen tedavi planlarının içinde çakışma olup olmadığını kontrol eden metot
-    private void checkDuplicateTreatmentPlans(Set<TreatmentPlan> treatmentPlans) {
-        for (TreatmentPlan requestTreatmentPlan : treatmentPlans) {
-            LocalDateTime requestStart = requestTreatmentPlan.getStartDate();
-            LocalDateTime requestStop = requestTreatmentPlan.getEndDate();
-
-            if (treatmentPlans.stream()
-                    .anyMatch(existingTreatmentPlan ->
-                            existingTreatmentPlan.getDay() == requestTreatmentPlan.getDay() && (
-                                    existingTreatmentPlan.getStartDate().isEqual(requestStart) ||
-                                            (existingTreatmentPlan.getStartDate().isBefore(requestStart) && existingTreatmentPlan.getEndDate().isAfter(requestStop)) ||
-                                            (existingTreatmentPlan.getStartDate().isAfter(requestStart) && existingTreatmentPlan.getEndDate().isBefore(requestStop))
-                            )
-                    )) {
-                throw new BadRequestException(ErrorMessages.TREATMENT_PLAN_ALREADY_EXIST);
-            }
-        }
-    }
-
-    // Talep edilen tedavi planlarının mevcut tedavi planları ile çakışıp çakışmadığını kontrol eden metot
-    private void checkDuplicateTreatmentPlans(Set<TreatmentPlan> existingTreatmentPlans, Set<TreatmentPlan> requestedTreatmentPlans) {
-        for (TreatmentPlan requestTreatmentPlan : requestedTreatmentPlans) {
-            LocalDateTime requestStart = requestTreatmentPlan.getStartDate();
-            LocalDateTime requestStop = requestTreatmentPlan.getEndDate();
-
-            if (existingTreatmentPlans.stream()
-                    .anyMatch(existingTreatmentPlan ->
-                            existingTreatmentPlan.getDay() == requestTreatmentPlan.getDay() && (
-                                    existingTreatmentPlan.getStartDate().isEqual(requestStart)
-                                            || (existingTreatmentPlan.getStartDate().isBefore(requestStart) && existingTreatmentPlan.getEndDate().isAfter(requestStop))
-                                            || (existingTreatmentPlan.getStartDate().isAfter(requestStart) && existingTreatmentPlan.getEndDate().isBefore(requestStop))
-                            )
-                    )) {
-                throw new BadRequestException(ErrorMessages.TREATMENT_PLAN_ALREADY_EXIST);
-            }
-        }
-    }
 }

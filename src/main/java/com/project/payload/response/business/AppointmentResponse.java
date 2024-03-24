@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -18,15 +19,19 @@ public class AppointmentResponse {
 
     private Long id;
 
-    private String appointmentDetails;
+    private String description;
 
-    private LocalDate appointmentDateTime;
+    private LocalDate date;
 
-    private String username;
+    private LocalTime startTime;
 
     private Long  doctorId;
 
     private String doctorName;
+
+    private LocalTime stopTime;
+
+    private String username;
 
     private User patient;
 

@@ -9,26 +9,32 @@ import org.springframework.stereotype.Component;
 public class AppointmentMapper {
     public Appointment mapAppointmentRequestToAppointment(AppointmentRequest appointmentRequest){
         return  Appointment.builder()
-                .appointmentDetails(appointmentRequest.getAppointmentDetails())
-                .appointmentDateTime(appointmentRequest.getAppointmentDateTime())
+                .date(appointmentRequest.getDate())
+                .startTime(appointmentRequest.getStartTime())
+                .stopTime(appointmentRequest.getStopTime())
+                .description(appointmentRequest.getDescription())
                 .build();
     }
 
     public AppointmentResponse mapAppointmentToAppointmentResponse(Appointment appointment){
         return AppointmentResponse.builder()
                 .id(appointment.getId())
-                .appointmentDateTime(appointment.getAppointmentDateTime())
-                .appointmentDetails(appointment.getAppointmentDetails())
+                .date(appointment.getDate())
+                .startTime(appointment.getStartTime())
+                .stopTime(appointment.getStopTime())
+                .description(appointment.getDescription())
                 .doctorId(appointment.getDoctor().getId())
-                .patient(appointment.getPatient())
                 .doctorName(appointment.getDoctor().getName())
+                .patient(appointment.getPatient())
                 .build();
     }
     public Appointment mapAppointmentUpdateRequestToAppointment(AppointmentRequest appointmentRequest,Long appointmentId){
         return Appointment.builder()
                 .id(appointmentId)
-                .appointmentDetails(appointmentRequest.getAppointmentDetails())
-                .appointmentDateTime(appointmentRequest.getAppointmentDateTime())
+                .startTime(appointmentRequest.getStartTime())
+                .stopTime(appointmentRequest.getStopTime())
+                .date(appointmentRequest.getDate())
+                .description(appointmentRequest.getDescription())
                 .build();
     }
 }

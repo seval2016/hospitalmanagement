@@ -14,7 +14,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
@@ -32,11 +34,19 @@ public class TreatmentPlanRequest {
 
     @NotNull(message = "Start Date must not be empty")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @NotNull(message = "End Date must not be empty")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "US")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "US")
+    @NotNull(message = "Please enter start time")
+    private LocalTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "US")
+    @NotNull(message = "Please enter stop time")
+    private LocalTime stopTime;
 
     @NotNull(message = "Treatment Method must not be empty")
     private String treatmentMethod;

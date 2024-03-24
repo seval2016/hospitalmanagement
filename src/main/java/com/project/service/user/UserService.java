@@ -220,4 +220,14 @@ public class UserService {
     public User getDoctorByUserName(String doctorUsername) {
         return userRepository.findByUsername(doctorUsername);
     }
+
+    public User getUserByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()->
+                new ResourceNotFoundException(ErrorMessages.NOT_FOUND_USER_MESSAGE));
+    }
+
+    public User getPatientById(Long patientId) {
+        return userRepository.findByIdsEquals(patientId);
+    }
+
 }
