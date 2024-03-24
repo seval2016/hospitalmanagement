@@ -3,6 +3,7 @@ package com.project.service.business;
 import com.project.entity.concretes.business.Appointment;
 import com.project.entity.concretes.user.User;
 import com.project.exception.ConflictException;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.AppointmentMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,11 +93,25 @@ public class AppointmentService {
     }
 
     public List<AppointmentResponse> getAll() {
-        return null;
+        return appointmentRepository.findAll()
+                .stream()
+                .map(appointmentMapper::mapAppointmentToAppointmentResponse)
+                .collect(Collectors.toList());
     }
 
     public ResponseMessage<AppointmentResponse> getAppointmentById(Long appointmentId) {
-        return null;
+        return ResponseMessage.<AppointmentResponse>builder()
+                .message(SuccessMessages.APPOINTMENT_FOUND)
+                .httpStatus(HttpStatus.OK)
+                .object(appointmentMapper.mapAppointmentToAppointmentResponse(isAppointmentExistById(appointmentId)))
+                .build();
+    }
+
+    private Appointment isAppointmentExistById(Long appointmentId){
+        return appointmentRepository
+                .findById(appointmentId).orElseThrow(
+                        ()->new ResourceNotFoundException(String.format(ErrorMessages.APPOINTMENT_NOT_FOUND_MESSAGE,appointmentId)));
+
     }
 
     public ResponseMessage delete(Long appointmentId, HttpServletRequest httpServletRequest) {
