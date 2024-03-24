@@ -61,6 +61,11 @@ public class AppointmentController {
         return appointmentService.updateAppointmentById(appointmentRequest, appointmentId, httpServletRequest);
     }
 
+    @GetMapping("/getAllAppointmentByDoctor")  //http://localhost:8080/appointment/getAllAppointmentByDoctor
+    @PreAuthorize("hasAnyAuthority('DOCTOR')")
+    public List<AppointmentResponse> getAllAppointmentByDoctor(HttpServletRequest httpServletRequest){
+        return appointmentService.getAllAppointmentByDoctor(httpServletRequest);
+    }
     @GetMapping("/getAllAppointmentByPatient")  //http://localhost:8080/appointment/getAllAppointmentByPatient
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     public List<AppointmentResponse> getAllAppointmentByPatient(HttpServletRequest httpServletRequest){

@@ -18,12 +18,12 @@ public class PatientInfoMapper {
     public PatientInfo mapPatientInfoRequestToPatientInfo(PatientInfoRequest patientInfoRequest) {
 
         return PatientInfo.builder()
+                .infoNote(patientInfoRequest.getInfoNote())
                 .bloodType(patientInfoRequest.getBloodType())
                 .allergyInfo(patientInfoRequest.getAllergyInfo())
                 .currentCondition(patientInfoRequest.getCurrentCondition())
                 .treatmentHistory(patientInfoRequest.getTreatmentHistory())
                 .currentMedications(patientInfoRequest.getCurrentMedications())
-                .infoNote(patientInfoRequest.getInfoNote())
                 .insuranceCompanyName(patientInfoRequest.getInsuranceCompanyName())
                 .insurancePolicyNumber(patientInfoRequest.getInsurancePolicyNumber())
                 .upcomingAppointments(patientInfoRequest.getUpcomingAppointments())
@@ -34,6 +34,7 @@ public class PatientInfoMapper {
         return PatientInfoResponse.builder()
                 .id(patientInfo.getId())
                 .departmentName(patientInfo.getDepartment().getDepartmentName())
+                .medicalRecordId(patientInfo.getMedicalRecord().getId())//??
                 .bloodType(patientInfo.getBloodType())
                 .allergyInfo(patientInfo.getAllergyInfo())
                 .currentCondition(patientInfo.getCurrentCondition())

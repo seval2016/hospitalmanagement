@@ -67,7 +67,7 @@ public class PatientInfoController {
         return patientInfoService.update(patientInfoRequest,patientInfoId);
 
     }
-
+    //bir doktor kendi hastalarının bilgilerini almak isterse
     @GetMapping("/getAllForDoctor") // http://localhost:8080/patientInfo/getAllForDoctor
     @PreAuthorize("hasAnyAuthority('DOCTOR')")
     public ResponseEntity<Page<PatientInfoResponse>> getAllForDoctor(
@@ -78,6 +78,7 @@ public class PatientInfoController {
         return new ResponseEntity<>(patientInfoService.getAllForDoctor(httpServletRequest,page,size), HttpStatus.OK);
     }
 
+    //!!! bir hasta kendi bilgilerini almak isterse
     @GetMapping("/getAllForPatient") // http://localhost:8080/patientInfo/getAllForPatient?page=0&size=10
     @PreAuthorize("hasAnyAuthority('PATIENT')")
     public ResponseEntity<Page<PatientInfoResponse>> getAllForPatient(

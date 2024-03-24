@@ -37,7 +37,7 @@ public class PatientInfoRequest {
     @NotNull(message = "Please enter info")
     @Size(min = 10, max = 200, message = "Info should be at least 10 chars")
     @Pattern(regexp = "\\A(?!\\s*\\Z).+" ,message="Info must consist of the characters .")
-    private String infoNote;
+    private String infoNote; //Doktorun hasta hakknda giremek isteyeceği bilgiler için
 
     @NotNull(message = "Insurance company name must not be empty")
     private String insuranceCompanyName;
@@ -47,11 +47,13 @@ public class PatientInfoRequest {
 
     private LocalDate upcomingAppointments;
 
+    @NotNull(message = "Please select department")
+    private Long departmentId;
+
     @NotNull(message = "Please select patient")
     private Long patientId;
 
-    @NotNull(message = "Please select department")
-    private Long departmentId;
+
 
 
 }

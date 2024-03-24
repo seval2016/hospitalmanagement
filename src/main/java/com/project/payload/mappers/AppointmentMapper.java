@@ -25,15 +25,15 @@ public class AppointmentMapper {
                 .description(appointment.getDescription())
                 .doctorId(appointment.getDoctor().getId())
                 .doctorName(appointment.getDoctor().getName())
-                .patient(appointment.getPatient())
+                .patientId(appointment.getPatient().getId())
                 .build();
     }
     public Appointment mapAppointmentUpdateRequestToAppointment(AppointmentRequest appointmentRequest,Long appointmentId){
         return Appointment.builder()
                 .id(appointmentId)
+                .date(appointmentRequest.getDate())
                 .startTime(appointmentRequest.getStartTime())
                 .stopTime(appointmentRequest.getStopTime())
-                .date(appointmentRequest.getDate())
                 .description(appointmentRequest.getDescription())
                 .build();
     }

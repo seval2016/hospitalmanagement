@@ -43,10 +43,10 @@ public class PatientInfoService {
     public ResponseMessage<PatientInfoResponse> savePatientInfo(HttpServletRequest httpServletRequest, PatientInfoRequest patientInfoRequest) {
 
         //!!! requestten username getiriliyor.
-        String doctorUsername= (String) httpServletRequest.getAttribute("username");
+        String doctorUsername = (String) httpServletRequest.getAttribute("username");
 
         //!!! requestte gelen patientId ile patient'i getirme
-        User patient= methodHelper.isUserExist(patientInfoRequest.getPatientId());
+        User patient = methodHelper.isUserExist(patientInfoRequest.getPatientId());
 
         //!!! requestten gelen patientId gerçekten  bir patient'a mi ait
         methodHelper.checkRole(patient, RoleType.PATIENT);
@@ -55,22 +55,22 @@ public class PatientInfoService {
         User doctor = userService.getDoctorByUsername(doctorUsername);
 
         // !!! requestten gelen departmentId ile department getiriyoruz
-        Department department= departmentService.isDepartmentExistById(patientInfoRequest.getDepartmentId());
+        Department department = departmentService.isDepartmentExistById(patientInfoRequest.getDepartmentId());
 
         // !!! requestten gelen medicalRecordId ile medicalRecord getiriyoruz
-        MedicalRecord medicalRecord=medicalRecordService.findMedicalRecordById(patientInfoRequest.getMedicalRecordId());
+        MedicalRecord medicalRecord = medicalRecordService.findMedicalRecordById(patientInfoRequest.getMedicalRecordId());
 
         //!!! aynı department için duplicate controlü
-        checkSameDepartment(patientInfoRequest.getPatientId(),department.getDepartmentName());
+        checkSameDepartment(patientInfoRequest.getPatientId(), department.getDepartmentName());
 
         //!!! DTO --> POJO
-        PatientInfo patientInfo=patientInfoMapper.mapPatientInfoRequestToPatientInfo(patientInfoRequest);
+        PatientInfo patientInfo = patientInfoMapper.mapPatientInfoRequestToPatientInfo(patientInfoRequest);
         patientInfo.setPatient(patient);
         patientInfo.setMedicalRecord(medicalRecord);
         patientInfo.setDoctor(doctor);
         patientInfo.setDepartment(department);
 
-        PatientInfo savedPatientInfo=patientInfoRepository.save(patientInfo);
+        PatientInfo savedPatientInfo = patientInfoRepository.save(patientInfo);
         return ResponseMessage.<PatientInfoResponse>builder()
                 .message(SuccessMessages.PATIENT_INFO_SAVED)
                 .object(patientInfoMapper.mapPatientInfoToPatientInfoResponse(savedPatientInfo))
@@ -78,20 +78,20 @@ public class PatientInfoService {
                 .build();
     }
 
-    private void checkSameDepartment(Long patientId, String departmentName){
+    private void checkSameDepartment(Long patientId, String departmentName) {
         boolean isDepartmentDuplicateExist =
                 patientInfoRepository.getAllByPatientId_Id(patientId)
                         .stream()
-                        .anyMatch(e->e.getDepartment().getDepartmentName().equalsIgnoreCase(departmentName));
+                        .anyMatch(e -> e.getDepartment().getDepartmentName().equalsIgnoreCase(departmentName));
 
-        if(isDepartmentDuplicateExist){
+        if (isDepartmentDuplicateExist) {
             throw new ConflictException(String.format(ErrorMessages.DEPARTMENT_ALREADY_EXIST_WITH_DEPARTMENT_NAME, departmentName));
         }
     }
 
     public ResponseMessage deletePatientInfo(Long patientInfoId) {
 
-        PatientInfo patientInfo= isPatientInfoExistById(patientInfoId);
+        PatientInfo patientInfo = isPatientInfoExistById(patientInfoId);
         patientInfoRepository.deleteById(patientInfoId);
 
         return ResponseMessage.builder()
@@ -100,33 +100,34 @@ public class PatientInfoService {
                 .build();
     }
 
-    public PatientInfo isPatientInfoExistById(Long id){
-        boolean isExist=patientInfoRepository.existsByIdEquals(id);
+    public PatientInfo isPatientInfoExistById(Long id) {
+        boolean isExist = patientInfoRepository.existsByIdEquals(id);
 
-        if(!isExist){
+        if (!isExist) {
             throw new ResourceNotFoundException(String.format(ErrorMessages.PATIENT_INFO_NOT_FOUND));
-        }else{
+        } else {
             return patientInfoRepository.findById(id).get();
         }
     }
 
     public Page<PatientInfoResponse> getAllPatientInfoByPage(int page, int size, String sort, String type) {
-        Pageable pageable=pageableHelper.getPageableWithProperties(page, size, sort, type);
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         return patientInfoRepository.findAll(pageable)
                 .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse);
     }
 
     public List<PatientInfoResponse> getPatientInfoByPatientId(Long patientId) {
-        User patient=methodHelper.isUserExist(patientId);
+        User patient = methodHelper.isUserExist(patientId);
 
         //!!! Gelen user Patient rolüne sahip mi ?
-        methodHelper.checkRole(patient,RoleType.PATIENT);
+        methodHelper.checkRole(patient, RoleType.PATIENT);
 
         //!!! Bu patient'e ait bir patientInfo var mı ?
-        if(!patientInfoRepository.existsByPatient_IdEquals(patientId)){
+        if (!patientInfoRepository.existsByPatient_IdEquals(patientId)) {
             throw new ResourceNotFoundException(
-                    String.format(ErrorMessages.PATIENT_INFO_NOT_FOUND_BY_PATIENT_ID,patientId)
-            );}
+                    String.format(ErrorMessages.PATIENT_INFO_NOT_FOUND_BY_PATIENT_ID, patientId)
+            );
+        }
         return patientInfoRepository.findByPatient_IdEquals(patientId)
                 .stream()
                 .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse)
@@ -139,18 +140,18 @@ public class PatientInfoService {
 
     public ResponseMessage<PatientInfoResponse> update(UpdatePatientInfoRequest patientInfoRequest, Long patientInfoId) {
 
-        Department department=departmentService.isDepartmentExistById(patientInfoRequest.getDepartmentId());
-        PatientInfo patientInfo=isPatientInfoExistById(patientInfoId);
-        MedicalRecord medicalRecord=medicalRecordService.findMedicalRecordById(patientInfoRequest.getMedicalRecordId());
+        Department department = departmentService.isDepartmentExistById(patientInfoRequest.getDepartmentId());
+        PatientInfo patientInfo = isPatientInfoExistById(patientInfoId);
+        MedicalRecord medicalRecord = medicalRecordService.findMedicalRecordById(patientInfoRequest.getMedicalRecordId());
 
         //!!! DTO -> POJO
-        PatientInfo patientInfoUpdate=
-                patientInfoMapper.mapPatientInfoRequestUpdateToPatientInfo(patientInfoRequest,patientInfoId,department,medicalRecord);
+        PatientInfo patientInfoUpdate =
+                patientInfoMapper.mapPatientInfoRequestUpdateToPatientInfo(patientInfoRequest, patientInfoId, department, medicalRecord);
 
         patientInfoUpdate.setDoctor(patientInfo.getDoctor());
         patientInfoUpdate.setPatient(patientInfo.getPatient());
 
-        PatientInfo updatedPatientInfo= patientInfoRepository.save(patientInfoUpdate);
+        PatientInfo updatedPatientInfo = patientInfoRepository.save(patientInfoUpdate);
 
         return ResponseMessage.<PatientInfoResponse>builder()
                 .message(SuccessMessages.PATIENT_INFO_UPDATE)
@@ -162,20 +163,20 @@ public class PatientInfoService {
 
     public Page<PatientInfoResponse> getAllForDoctor(HttpServletRequest httpServletRequest, int page, int size) {
 
-        Pageable pageable = pageableHelper.getPageableWithProperties(page,size);
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
         String userName = (String) httpServletRequest.getAttribute("username");
 
-        return patientInfoRepository.findByDoctorId_UsernameEquals(userName,pageable)
+        return patientInfoRepository.findByDoctorId_UsernameEquals(userName, pageable)
                 .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse);
 
     }
 
     public Page<PatientInfoResponse> getAllForPatient(HttpServletRequest httpServletRequest, int page, int size) {
 
-        Pageable pageable = pageableHelper.getPageableWithProperties(page,size);
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
         String userName = (String) httpServletRequest.getAttribute("username");
 
-        return patientInfoRepository.findByPatientId_UsernameEquals(userName,pageable)
+        return patientInfoRepository.findByPatientId_UsernameEquals(userName, pageable)
                 .map(patientInfoMapper::mapPatientInfoToPatientInfoResponse);
-        }
+    }
 }

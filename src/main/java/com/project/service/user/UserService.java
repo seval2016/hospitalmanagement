@@ -227,7 +227,7 @@ public class UserService {
     }
 
     public User getPatientById(Long patientId) {
-        return userRepository.findByIdsEquals(patientId);
+        return userRepository.findByIdEquals(patientId);
     }
 
 }

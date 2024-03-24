@@ -28,7 +28,7 @@ public class AppointmentRequest {
 
     @NotNull(message = "Please enter day")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @Future
+    @Future //gelen gün bilgisinin ileriki tarihler olması için bu annotation kullanılır
     private LocalDate date;
 
     @NotNull(message = "Please enter start time")

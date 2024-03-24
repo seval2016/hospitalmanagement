@@ -39,24 +39,24 @@ public class AppointmentService {
     private final UserService userService;
     private final PageableHelper pageableHelper;
     private final AppointmentMapper appointmentMapper;
-    private final DoctorService doctorService;
 
 
     public ResponseMessage<AppointmentResponse> saveAppointment(HttpServletRequest httpServletRequest, AppointmentRequest appointmentRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
-        User doctorId = methodHelper.isUserExistByUsername(username);
+        User doctor = methodHelper.isUserExistByUsername(username);
 
         //!!! Doktor'un mevcut appointment'leri ile cakisma var mi
         dateTimeValidator.checkDateWithException(appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
 
-        checkAppointmentConflict(doctorId.getId(), appointmentRequest.getDate(), appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
+        checkAppointmentConflict(doctor.getId(), appointmentRequest.getDate(), appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
 
         //!!! Appointment'e katilacak Patient getiriliyor
-        User patients = userService.getPatientById(appointmentRequest.getPatientId());
+        User patient = userService.getPatientById(appointmentRequest.getPatientId());
 
         //!!! DTO -> POJO
         Appointment appointment = appointmentMapper.mapAppointmentRequestToAppointment(appointmentRequest);
-        appointment.setPatient(patients);
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
@@ -67,13 +67,14 @@ public class AppointmentService {
                 .build();
     }
 
+    //Long userId 'ı parametre olarak almamızın sebebi : Gönderdiğimiz userId eğer bir doctorId ise o doctor üzerinden conflict var mı yada öğrenci üzerinden geliyor ise öğrenci üzerinden çakışma var mı diye kontrol edecek.
     private void checkAppointmentConflict(Long userId, LocalDate date, LocalTime startTime, LocalTime stoptime) {
 
         List<Appointment> appointments;
 
         //!!! Patient veya Doctor ait olan mevcut Appointmentler getiriliyor.
-        if (Boolean.TRUE.equals(userService.getUserByUserId(userId))) {
-            appointments = appointmentRepository.getByDoctor_IdEquals(userId);
+        if (Boolean.TRUE.equals(userService.getUserByUserId(userId).getPatientDoctorId())) {
+            appointments = appointmentRepository.getByDoctor_IdEquals(userId); //appointment tablosuna gider id'si verilen doktor'un randevularını getirir.
         } else appointments = appointmentRepository.findByPatientList_IdEquals(userId);
 
         //!!! cakisma kontrolu
@@ -84,9 +85,9 @@ public class AppointmentService {
             if (appointment.getDate().equals(date) &&
                     (
                             (startTime.isAfter(existingStartTime) && startTime.isBefore(existingStopTime)) ||
-                                    (stoptime.isAfter(existingStartTime) && stoptime.isBefore(existingStopTime)) ||
-                                    (startTime.isBefore(existingStartTime) && stoptime.isAfter(existingStopTime)) ||
-                                    (startTime.equals(existingStartTime) || stoptime.equals(existingStopTime))
+                            (stoptime.isAfter(existingStartTime) && stoptime.isBefore(existingStopTime)) ||
+                            (startTime.isBefore(existingStartTime) && stoptime.isAfter(existingStopTime)) ||
+                            (startTime.equals(existingStartTime) || stoptime.equals(existingStopTime))
                     )
             ) {
                 throw new ConflictException(ErrorMessages.APPOINTMENT_HOURS_CONFLICT);

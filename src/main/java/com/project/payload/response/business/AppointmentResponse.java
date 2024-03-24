@@ -1,5 +1,6 @@
 package com.project.payload.response.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.entity.concretes.user.User;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -25,16 +27,12 @@ public class AppointmentResponse {
 
     private LocalTime startTime;
 
-    private Long  doctorId;
+    private LocalTime stopTime;
+
+    private Long doctorId;
 
     private String doctorName;
 
-    private LocalTime stopTime;
-
-    private String username;
-
-    private User patient;
-
-
+    private Long patientId;
 
 }

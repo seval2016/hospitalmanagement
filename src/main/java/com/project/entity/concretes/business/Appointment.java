@@ -48,8 +48,5 @@ public class Appointment {
     @JoinColumn(name = "patient_id")
     private User patient;
 
-
-
-
 }
 
