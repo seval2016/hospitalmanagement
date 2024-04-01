@@ -146,9 +146,9 @@ public class AppointmentService {
         return appointmentRepository.findAll(pageable).map(appointmentMapper::mapAppointmentToAppointmentResponse);
     }
 
-    public ResponseMessage<AppointmentResponse> updateAppointmentById(AppointmentRequest appointmentRequest, Long appointmentId, HttpServletRequest httpServletRequest) {
+    public ResponseMessage<AppointmentResponse> updateAppointmentById(AppointmentRequest appointmentRequest,
+                                                                      Long appointmentId, HttpServletRequest httpServletRequest) {
         Appointment appointment = isAppointmentExistById(appointmentId);
-
         isDoctorControl(appointment, httpServletRequest);
 
         dateTimeValidator.checkDateWithException(appointmentRequest.getStartTime(), appointmentRequest.getStopTime());
