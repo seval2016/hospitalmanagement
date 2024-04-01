@@ -75,7 +75,7 @@ public class AppointmentService {
         //!!! Patient veya Doctor ait olan mevcut Appointmentler getiriliyor.
         if (Boolean.TRUE.equals(userService.getUserByUserId(userId).getPatientDoctorId())) {
             appointments = appointmentRepository.getByDoctor_IdEquals(userId); //appointment tablosuna gider id'si verilen doktor'un randevularını getirir.
-        } else appointments = appointmentRepository.findByPatientList_IdEquals(userId);
+        } else appointments = appointmentRepository.findByPatient_IdEquals(userId);
 
         //!!! cakisma kontrolu
         for (Appointment appointment : appointments) {
@@ -196,7 +196,7 @@ public class AppointmentService {
 
         methodHelper.checkRole(patient, RoleType.PATIENT);
 
-        return appointmentRepository.findByPatientList_IdEquals(patient.getId())
+        return appointmentRepository.findByPatient_IdEquals(patient.getId())
                 .stream()
                 .map(appointmentMapper::mapAppointmentToAppointmentResponse)
                 .collect(Collectors.toList());

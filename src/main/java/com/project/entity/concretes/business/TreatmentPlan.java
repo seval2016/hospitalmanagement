@@ -55,7 +55,9 @@ public class TreatmentPlan {
     @NotNull(message = "Treatment Method must not be empty")
     private String treatmentMethod; //Tedavi yöntemi
 
-    @NotNull(message = "Medications must not be empty")
+    @ElementCollection
+    @CollectionTable(name = "medications", joinColumns = @JoinColumn(name = "treatment_plan_id"))
+    @Column(name = "medication")
     private List<String> medications;
 
 
