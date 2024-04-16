@@ -105,7 +105,7 @@ User - User Role
 ----------------
  PatientInfo - TreatmentPlan - Appointment - Department - MedicalRecord
 
-treatment plan -> LessonProgram
+treatmentPlan -> LessonProgram
 Patient Info -> StudentInfo
 Appointment  -> Meet
 MedicalRecord ->Educationterm
@@ -138,3 +138,42 @@ Patient - Info
 Treatment Plan - Appointment
     ManyToOne: Appointment (reverse relationship)
 
+/***************************************************/
+
+medicalrecord
+{
+          "diagnosis": "doctors diagnosis",
+          "prescription":"20 days medicine",
+          "startDate": "2023-03-01",
+          "endDate": "2023-06-30",
+          "recordDate":"2023-02-15",
+          "labTestResults":"Blood_Brh+",
+          "imagingTestResults": "testsonuclari/film.jpg"
+        }
+
+        2.si
+
+        {
+                  "diagnosis": "doctors diagnosis",
+                  "prescription":"10 days medicine",
+                  "startDate": "2024-04-01",
+                  "endDate": "2024-07-30",
+                  "recordDate":"2024-03-15",
+                  "labTestResults":"Blood_Brh+",
+                  "imagingTestResults": "testsonuclari/film2.jpg"
+                }
+
+ treatment plan
+
+ {
+   "day": "MONDAY",
+   "planDetails": "Daily checkup and medication",
+   "startDate": "2024-04-19",
+   "endDate": "2024-04-26",
+   "startTime": "08:00",
+   "stopTime": "12:00",
+   "treatmentMethod": "Physiotherapy",
+   "medications": ["Paracetamol", "Ibuprofen"],
+   "departmentIdList": [1, 2],
+   "medicalRecordId": 12345
+ }

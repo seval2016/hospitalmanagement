@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtUtils { //Jwt token içerisindeki username bilgisini almak için ve jwt tokenleri generate ve validate etme işlemleri için yazdığımız yardımcı methodların bulunduğu class.
-
-    // Bir Jwt Token kaydedilirken hangi bilgiler gerekli. 1-jwtExpirationMs ve 2-jwtSecret
+public class JwtUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
@@ -23,9 +21,8 @@ public class JwtUtils { //Jwt token içerisindeki username bilgisini almak için
     @Value("${backendapi.app.jwtSecret}")
     private String jwtSecret;
 
-    public String generateJwtToken(Authentication authentication){ //anlık olrak login işlemini gerçekleştiren kullanıcıyı bul getir.
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal(); //getPrincipal dendiğinde login olan kullanıcıyı getirir.
+    public String generateJwtToken(Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         return generateTokenFromUsername(userDetails.getUsername());
     }
 
@@ -39,7 +36,6 @@ public class JwtUtils { //Jwt token içerisindeki username bilgisini almak için
     }
 
     public boolean validateJwtToken(String jwtToken){
-
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwtToken);
             return true;
@@ -57,11 +53,24 @@ public class JwtUtils { //Jwt token içerisindeki username bilgisini almak için
         return false;
     }
 
+    public boolean isTokenExpired(String jwtToken){
+        Date expiration = getExpirationDateFromJwtToken(jwtToken);
+        return expiration != null && expiration.before(new Date());
+    }
+
     public String getUserNameFromJwtToken(String token){
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    private Date getExpirationDateFromJwtToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
     }
 }

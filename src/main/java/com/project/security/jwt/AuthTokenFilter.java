@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class AuthTokenFilter extends OncePerRequestFilter { //JwtToken ile alakalı security katmanında gerekli olan methodları yada class'ları jwt package içerisinde oluşturuyoruz.AuthTokenFilter class'ının amacı JwtToken'leri JwtToken üzerinde kullanıcıları tanımlama işlemini design edebilmek için bize bir filtre lazım. AuthTokenFilter, JwtToken ile validate etme işlemlerini yapacak olan filter class'ıdır. AuthTokenFilter bir filter class'ı ve bunu securty'e bildirmek için OncePerRequestFilter'den extend ediyoruz.
+public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -38,26 +38,28 @@ public class AuthTokenFilter extends OncePerRequestFilter { //JwtToken ile alaka
 
         try {
             String jwt = parseJwt(request);
-            if(jwt !=null && jwtUtils.validateJwtToken(jwt) ){
-
-                String userName = jwtUtils.getUserNameFromJwtToken(jwt);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-                request.setAttribute("username", userName);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                // bu UsernamePasswordAuthenticationToken nesnesinin ayrıntılarını ayarlar.
-                // WebAuthenticationDetailsSource kullanarak, isteğin ayrıntılarını (örneğin, IP adresi,
-                // kullanılan tarayıcı vb.) bu nesneye ekler. Bu bilgiler, kullanıcının oturum açma
-                // isteğinin nereden geldiği ve hangi cihaz üzerinden yapıldığı gibi ayrıntıları içerir.
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                if (!jwtUtils.isTokenExpired(jwt)) { // Token süresi dolmuş değilse devam et
+                    String userName = jwtUtils.getUserNameFromJwtToken(jwt);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+                    request.setAttribute("username", userName);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    LOGGER.error("JWT token is expired");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is expired");
+                    return;
+                }
             }
         } catch (UsernameNotFoundException e) {
             LOGGER.error("Cannot set user authentication ", e);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
+
 
     private String parseJwt(HttpServletRequest request){
 
