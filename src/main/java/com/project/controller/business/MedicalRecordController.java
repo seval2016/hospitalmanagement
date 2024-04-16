@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/medicalRecords")
 public class MedicalRecordController {
-    private MedicalRecordService medicalRecordService;
+    private final MedicalRecordService medicalRecordService;
 
     @PostMapping("/save")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')") //http://localhost:8080/medicalRecords/save

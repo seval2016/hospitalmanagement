@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Long> {
 
-    @Query("SELECT m FROM MedicalRecord m WHERE ECTRACT(YEAR FROM m.startDate)=?1")
+    @Query("SELECT m FROM MedicalRecord m WHERE EXTRACT(YEAR FROM m.startDate) = ?1")
     List<MedicalRecord> findByYear(int year);
 }
